@@ -27,6 +27,8 @@ let package = Package(
             dependencies: []),
         .testTarget(
             name: "LastFmKitTests",
-            dependencies: ["LastFmKit"]),
+            dependencies: ["LastFmKit"],
+            resources: [.process("Resources/")]
+            ),
     ]
 )

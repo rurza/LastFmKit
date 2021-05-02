@@ -10,6 +10,7 @@ import CryptoKit
 
 enum LastFmMethod: String {
     case getMobilSession = "auth.getMobileSession"
+    case scrobbleTrack = "track.scrobble"
     
     func queryItem() -> URLQueryItem {
         return URLQueryItem(name: "method", value: rawValue)
@@ -18,14 +19,61 @@ enum LastFmMethod: String {
 
 struct LastFmURLRequestsFactory {
     
-//    static func getSession(with apiKey: String, username: String, password: String) -> URLRequest {
-//        var components = commonComponents()
-//        components.queryItems = [
-//            LastFmMethod.getMobilSession.queryItem(),
-//            URLQueryItem(name: "username", value: username),
-//            URLQueryItem(name: "password", value: password)
-//        ]
-//    }
+    enum RequestError: Error {
+        case noQueryItems
+        case urlIsNil
+        case cannotMakeBody
+    }
+    
+    static func logInUserRequest(withUsername username: String, password: String, apiKey: String, secret: String) throws -> URLRequest {
+        var components = commonComponents()
+        components.queryItems = [
+            LastFmMethod.getMobilSession.queryItem(),
+            URLQueryItem(name: "username", value: username),
+            URLQueryItem(name: "password", value: password)
+        ]
+        return try requestForComponents(components, apiKey: apiKey, secret: secret, sessionKey: nil)
+    }
+    
+    static func scrobbleTrack(withTitle title: String,
+                              byArtist artist: String,
+                              albumArtist: String?,
+                              scrobbleDate: Date,
+                              apiKey: String,
+                              secret: String,
+                              sessionKey: String) throws -> URLRequest {
+        var components = commonComponents()
+        components.queryItems = [
+            LastFmMethod.scrobbleTrack.queryItem(),
+            URLQueryItem(name: "artist", value: artist),
+            URLQueryItem(name: "track", value: title),
+            URLQueryItem(name: "albumArtist", value: albumArtist),
+            URLQueryItem(name: "timestamp", value: "\(scrobbleDate.timeIntervalSince1970)")
+        ]
+        return try requestForComponents(components, apiKey: apiKey, secret: secret, sessionKey: sessionKey)
+    }
+    
+    static func requestForComponents(_ components: URLComponents,
+                                     apiKey: String,
+                                     secret: String,
+                                     sessionKey: String?) throws -> URLRequest {
+        guard var queryItems = components.queryItems else { throw RequestError.noQueryItems }
+        queryItems.append(URLQueryItem(name: "api_key", value: apiKey))
+        if let key = sessionKey {
+            queryItems.append(URLQueryItem(name: "sk", value: key))
+        }
+        queryItems.append(URLQueryItem(name: "api_sig", value: methodSignature(for: queryItems, secret: secret)))
+        queryItems.append(URLQueryItem(name: "format", value: "json"))
+        var components = components
+        components.queryItems = queryItems
+        guard let body = components.query?.data(using: .utf8) else { throw RequestError.cannotMakeBody }
+        components.query = nil
+        guard let url = components.url else { throw RequestError.urlIsNil }
+        var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 20)
+        request.httpMethod = "POST"
+        request.httpBody = body
+        return request
+    }
 }
 
 // MARK: Private
@@ -58,31 +106,5 @@ extension Insecure.MD5Digest {
     /// changes digest into hex string
     func hexString() -> String {
         return self.map { String(format: "%02hhx", $0) }.joined()
-    }
-}
-
-func mver<S, A>(
-    _ setter: (@escaping (inout A) -> Void) -> (inout S) -> Void,
-    _ set: @escaping (inout A) -> Void
-) -> (inout S) -> Void {
-    return setter(set)
-}
-
-//func prop<Root, Value>(_ kp: WritableKeyPath<Root, Value>) -> (@escaping (Value) -> Value) -> (Root) -> Root {
-//    return { update in
-//        return { root in
-//            var root = root
-//            root[keyPath: kp] = update(root[keyPath: kp])
-//            return root
-//        }
-//    }
-//}
-
-func prop<Root, Value>(_ kp: WritableKeyPath<Root, Value>) -> (@escaping (inout Value) -> Void) -> (inout Root) -> Void {
-    return { update in
-        return { root in
-            update(&root[keyPath: kp])
-        }
-        
     }
 }

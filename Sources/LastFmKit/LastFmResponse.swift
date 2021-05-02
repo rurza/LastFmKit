@@ -8,5 +8,6 @@
 import Foundation
 
 public struct LastFmResponse<Resource: Codable>: Codable {
-    
+    let results: Resource
+    let status: String
 }
