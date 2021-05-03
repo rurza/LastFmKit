@@ -97,7 +97,7 @@ extension LastFmScrobbleTrackResponse.Correction {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(value, forKey: .text)
-        try container.encode(isCorrected ? 1 : 0, forKey: .corrected)
+        try container.encode(isCorrected ? "1" : "0", forKey: .corrected)
     }
 
 }

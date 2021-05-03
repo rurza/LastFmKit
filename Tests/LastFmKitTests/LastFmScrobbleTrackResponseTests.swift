@@ -30,7 +30,12 @@ final class LastFmScrobbleTrackResponseTests: XCTestCase {
         let data = try encoder.encode(response)
         let newResponse = try decoder.decode(LastFmScrobbleTrackResponse.self, from: data)
         
-//        XCTAssertEqual(response, newResponse)
+        XCTAssertEqual(response.track.isCorrected, newResponse.track.isCorrected)
+        XCTAssertEqual(response.artist.isCorrected, newResponse.artist.isCorrected)
+        XCTAssertEqual(response.scrobbleDate, newResponse.scrobbleDate)
+        XCTAssertEqual(response.artist.value, newResponse.artist.value)
+        XCTAssertEqual(response.album.value, newResponse.album.value)
+        XCTAssertEqual(response.albumArtist.value, newResponse.albumArtist.value)
     }
     
 }
