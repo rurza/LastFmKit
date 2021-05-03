@@ -36,23 +36,13 @@ final class LastFmURLRequestsFactoryTests: XCTestCase {
         XCTAssertEqual(sortedQueryItems.last, zItem)
     }
     
-    /// I expect this method will fail, because we require to have already at least one query item made on the call site
-    func testGenericRequestMethodWithComponentsWithoutQuery() throws {
-        let components = LastFmURLRequestsFactory.commonComponents()
-        XCTAssertThrowsError(try LastFmURLRequestsFactory.requestForComponents(components,
-                                                                               apiKey: apiKey,
-                                                                               secret: secret,
-                                                                               sessionKey: nil))
-    }
-    
-
     func testGetSessionRequest() throws {
         let username = "username"
         let password = "pass"
-        let request = try LastFmURLRequestsFactory.logInUserRequest(withUsername: username,
-                                                          password: password,
-                                                          apiKey: apiKey,
-                                                          secret: secret)
+        let request = LastFmURLRequestsFactory.logInUserRequest(withUsername: username,
+                                                                password: password,
+                                                                apiKey: apiKey,
+                                                                secret: secret)
         XCTAssertEqual(request.httpMethod, "POST")
         XCTAssertNotNil(request.httpBody)
         let body = String(data: request.httpBody!, encoding: .utf8)
@@ -60,21 +50,32 @@ final class LastFmURLRequestsFactoryTests: XCTestCase {
     }
     
     func testScrobbleTrackRequest() throws {
-        let track = "Ænima"
+        let track = "10,000 Days (Wings Part 2)"
         let artist = "Tool"
         let albumArtist = "Tool"
+        let album = "10,000 Days"
         let date = Date()
-        let request = try LastFmURLRequestsFactory.scrobbleTrack(withTitle: track, byArtist: artist, albumArtist: albumArtist, scrobbleDate: date, apiKey: apiKey, secret: secret, sessionKey: sessionKey)
+        let request = LastFmURLRequestsFactory.scrobbleTrack(withTitle: track,
+                                                                 byArtist: artist,
+                                                                 albumArtist: albumArtist,
+                                                                 album: track,
+                                                                 scrobbleDate: date,
+                                                                 apiKey: apiKey,
+                                                                 secret: secret,
+                                                                 sessionKey: sessionKey)
         XCTAssertEqual(request.httpMethod, "POST")
         XCTAssertNotNil(request.httpBody)
         let body = String(data: request.httpBody!, encoding: .utf8)!
         XCTAssertTrue(body.contains("method=\(LastFmMethod.scrobbleTrack.rawValue)"))
         XCTAssertTrue(body.contains("artist=\(artist)"))
+        // Have to fix it because it doesn't encode the value
         XCTAssertTrue(body.contains("track=\(track)"))
         XCTAssertTrue(body.contains("albumArtist=\(albumArtist)"))
         XCTAssertTrue(body.contains("timestamp=\(date.timeIntervalSince1970)"))
         XCTAssertTrue(body.contains("api_key=\(apiKey)"))
         XCTAssertTrue(body.contains("sk=\(sessionKey)"))
+        // Have to fix it because it doesn't encode the value
+        XCTAssertTrue(body.contains("album=\(album)"))
     }
 
 }

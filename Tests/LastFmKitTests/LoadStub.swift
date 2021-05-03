@@ -12,6 +12,7 @@ enum FileName: String {
     case userSession
     case errorResponse
     case errorWithUnknownCodeResponse
+    case scrobbleResponse
 }
 
 extension Data {

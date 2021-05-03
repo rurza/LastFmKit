@@ -54,7 +54,7 @@ final class LastFmClientTests: XCTestCase {
             } receiveValue: { _ in XCTFail() }
             .store(in: &cancellables)
     }
-
+    
 }
 
 enum DataTaskPublisherMock {

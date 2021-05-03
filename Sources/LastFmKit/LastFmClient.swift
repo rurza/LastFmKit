@@ -42,7 +42,7 @@ public class LastFmClient {
     
     public func logInUser(_ username: String, password: String)
     -> AnyPublisher<LastFmSession, Error> {
-        let request = try! LastFmURLRequestsFactory.logInUserRequest(withUsername: username,
+        let request = LastFmURLRequestsFactory.logInUserRequest(withUsername: username,
                                                                      password: password,
                                                                      apiKey: apiKey,
                                                                      secret: secret)
@@ -52,16 +52,18 @@ public class LastFmClient {
     public func scrobbleTrack(_ track: String,
                               byArtist artist: String,
                               albumArtist: String?,
+                              album: String?,
                               scrobbleDate: Date = Date())
-    throws -> AnyPublisher<LastFmSession, Error> {
+    throws -> AnyPublisher<LastFmScrobbleTrackResponse, Error> {
         guard let sessionKey = sessionKey else { throw ClientError.sessionKeyNotSet }
-        let request = try LastFmURLRequestsFactory.scrobbleTrack(withTitle: track,
-                                                                 byArtist: artist,
-                                                                 albumArtist: albumArtist,
-                                                                 scrobbleDate: scrobbleDate,
-                                                                 apiKey: apiKey,
-                                                                 secret: secret,
-                                                                 sessionKey: sessionKey)
+        let request = LastFmURLRequestsFactory.scrobbleTrack(withTitle: track,
+                                                             byArtist: artist,
+                                                             albumArtist: albumArtist,
+                                                             album: album,
+                                                             scrobbleDate: scrobbleDate,
+                                                             apiKey: apiKey,
+                                                             secret: secret,
+                                                             sessionKey: sessionKey)
         return makeRequestPublisher(request, useCache: false)
     }
     

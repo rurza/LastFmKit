@@ -19,45 +19,48 @@ enum LastFmMethod: String {
 
 struct LastFmURLRequestsFactory {
     
-    enum RequestError: Error {
-        case noQueryItems
-        case urlIsNil
-        case cannotMakeBody
-    }
-    
-    static func logInUserRequest(withUsername username: String, password: String, apiKey: String, secret: String) throws -> URLRequest {
+    static func logInUserRequest(withUsername username: String, password: String, apiKey: String, secret: String) -> URLRequest {
         var components = commonComponents()
         components.queryItems = [
             LastFmMethod.getMobilSession.queryItem(),
             URLQueryItem(name: "username", value: username),
             URLQueryItem(name: "password", value: password)
         ]
-        return try requestForComponents(components, apiKey: apiKey, secret: secret, sessionKey: nil)
+        return requestForComponents(components, apiKey: apiKey, secret: secret, sessionKey: nil)
     }
     
     static func scrobbleTrack(withTitle title: String,
                               byArtist artist: String,
                               albumArtist: String?,
+                              album: String?,
                               scrobbleDate: Date,
                               apiKey: String,
                               secret: String,
-                              sessionKey: String) throws -> URLRequest {
+                              sessionKey: String) -> URLRequest {
         var components = commonComponents()
-        components.queryItems = [
+        var queryItems = [
             LastFmMethod.scrobbleTrack.queryItem(),
             URLQueryItem(name: "artist", value: artist),
             URLQueryItem(name: "track", value: title),
-            URLQueryItem(name: "albumArtist", value: albumArtist),
             URLQueryItem(name: "timestamp", value: "\(scrobbleDate.timeIntervalSince1970)")
         ]
-        return try requestForComponents(components, apiKey: apiKey, secret: secret, sessionKey: sessionKey)
+        if let album = album {
+            queryItems.append(URLQueryItem(name: "album", value: album))
+        }
+        if let albumArtist = albumArtist {
+            queryItems.append(URLQueryItem(name: "albumArtist", value: albumArtist))
+        }
+        components.queryItems = queryItems
+        return requestForComponents(components, apiKey: apiKey, secret: secret, sessionKey: sessionKey)
     }
     
     static func requestForComponents(_ components: URLComponents,
                                      apiKey: String,
                                      secret: String,
-                                     sessionKey: String?) throws -> URLRequest {
-        guard var queryItems = components.queryItems else { throw RequestError.noQueryItems }
+                                     sessionKey: String?) -> URLRequest {
+        assert((components.queryItems?.count ?? 0) > 0)
+        assert(components.queryItems?.compactMap { $0.value }.count == components.queryItems?.count)
+        var queryItems = components.queryItems!
         queryItems.append(URLQueryItem(name: "api_key", value: apiKey))
         if let key = sessionKey {
             queryItems.append(URLQueryItem(name: "sk", value: key))
@@ -66,10 +69,11 @@ struct LastFmURLRequestsFactory {
         queryItems.append(URLQueryItem(name: "format", value: "json"))
         var components = components
         components.queryItems = queryItems
-        guard let body = components.query?.data(using: .utf8) else { throw RequestError.cannotMakeBody }
+        // we'll always have the query so it's safe to unwrap it here
+        let body = components.percentEncodedQuery!.data(using: .utf8)
         components.query = nil
-        guard let url = components.url else { throw RequestError.urlIsNil }
-        var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 20)
+        // we'll always generate the URL (hopefully :D)
+        var request = URLRequest(url: components.url!, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 20)
         request.httpMethod = "POST"
         request.httpBody = body
         return request
