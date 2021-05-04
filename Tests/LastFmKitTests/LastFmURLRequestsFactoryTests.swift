@@ -50,6 +50,7 @@ final class LastFmURLRequestsFactoryTests: XCTestCase {
     }
     
     func testScrobbleTrackRequest() throws {
+        let characterSet = CharacterSet.urlQueryAllowed
         let track = "10,000 Days (Wings Part 2)"
         let artist = "Tool"
         let albumArtist = "Tool"
@@ -67,15 +68,15 @@ final class LastFmURLRequestsFactoryTests: XCTestCase {
         XCTAssertNotNil(request.httpBody)
         let body = String(data: request.httpBody!, encoding: .utf8)!
         XCTAssertTrue(body.contains("method=\(LastFmMethod.scrobbleTrack.rawValue)"))
-        XCTAssertTrue(body.contains("artist=\(artist)"))
+        XCTAssertTrue(body.contains("artist=\(artist.addingPercentEncoding(withAllowedCharacters: characterSet)!)"))
         // Have to fix it because it doesn't encode the value
-        XCTAssertTrue(body.contains("track=\(track)"))
-        XCTAssertTrue(body.contains("albumArtist=\(albumArtist)"))
+        XCTAssertTrue(body.contains("track=\(track.addingPercentEncoding(withAllowedCharacters: characterSet)!)"))
+        XCTAssertTrue(body.contains("albumArtist=\(albumArtist.addingPercentEncoding(withAllowedCharacters: characterSet)!)"))
         XCTAssertTrue(body.contains("timestamp=\(date.timeIntervalSince1970)"))
         XCTAssertTrue(body.contains("api_key=\(apiKey)"))
         XCTAssertTrue(body.contains("sk=\(sessionKey)"))
         // Have to fix it because it doesn't encode the value
-        XCTAssertTrue(body.contains("album=\(album)"))
+        XCTAssertTrue(body.contains("album=\(album.addingPercentEncoding(withAllowedCharacters: characterSet)!)"))
     }
 
 }
