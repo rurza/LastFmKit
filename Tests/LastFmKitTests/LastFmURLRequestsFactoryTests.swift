@@ -56,7 +56,7 @@ final class LastFmURLRequestsFactoryTests: XCTestCase {
         let albumArtist = "Tool"
         let album = "10,000 Days"
         let date = Date()
-        let request = LastFmURLRequestsFactory.scrobbleTrack(withTitle: track,
+        let request = LastFmURLRequestsFactory.scrobbleTrackRequest(withTitle: track,
                                                                  byArtist: artist,
                                                                  albumArtist: albumArtist,
                                                                  album: track,
@@ -69,14 +69,42 @@ final class LastFmURLRequestsFactoryTests: XCTestCase {
         let body = String(data: request.httpBody!, encoding: .utf8)!
         XCTAssertTrue(body.contains("method=\(LastFmMethod.scrobbleTrack.rawValue)"))
         XCTAssertTrue(body.contains("artist=\(artist.addingPercentEncoding(withAllowedCharacters: characterSet)!)"))
-        // Have to fix it because it doesn't encode the value
         XCTAssertTrue(body.contains("track=\(track.addingPercentEncoding(withAllowedCharacters: characterSet)!)"))
         XCTAssertTrue(body.contains("albumArtist=\(albumArtist.addingPercentEncoding(withAllowedCharacters: characterSet)!)"))
         XCTAssertTrue(body.contains("timestamp=\(date.timeIntervalSince1970)"))
         XCTAssertTrue(body.contains("api_key=\(apiKey)"))
         XCTAssertTrue(body.contains("sk=\(sessionKey)"))
-        // Have to fix it because it doesn't encode the value
         XCTAssertTrue(body.contains("album=\(album.addingPercentEncoding(withAllowedCharacters: characterSet)!)"))
+    }
+    
+    func testLoveTrackRequest() throws {
+        let characterSet = CharacterSet.urlQueryAllowed
+        let track = "Piano Concerto in A Minor, Op. 54: II. Intermezzo - Andante grazioso"
+        let artist = "マリアン・ラプサンスキー/スロヴァキア・フィルハーモニー管弦楽団/ビストリク・レジュハ"
+        let request = LastFmURLRequestsFactory.loveTrackRequest(withTitle: track, byArtist: artist, apiKey: apiKey, secret: secret, sessionKey: sessionKey)
+        XCTAssertEqual(request.httpMethod, "POST")
+        XCTAssertNotNil(request.httpBody)
+        let body = String(data: request.httpBody!, encoding: .utf8)!
+        XCTAssertTrue(body.contains("method=\(LastFmMethod.loveTrack.rawValue)"))
+        XCTAssertTrue(body.contains("artist=\(artist.addingPercentEncoding(withAllowedCharacters: characterSet)!)"))
+        XCTAssertTrue(body.contains("track=\(track.addingPercentEncoding(withAllowedCharacters: characterSet)!)"))
+        XCTAssertTrue(body.contains("api_key=\(apiKey)"))
+        XCTAssertTrue(body.contains("sk=\(sessionKey)"))
+    }
+    
+    func testUnloveTrackRequest() throws {
+        let characterSet = CharacterSet.urlQueryAllowed
+        let track = "PréLude à L'aprèS-Midi D'un Faune (Afternoon of a Faun)"
+        let artist = "Austrian Radio Symphony Orchestra, Milan Horvat"
+        let request = LastFmURLRequestsFactory.unloveTrackRequest(withTitle: track, byArtist: artist, apiKey: apiKey, secret: secret, sessionKey: sessionKey)
+        XCTAssertEqual(request.httpMethod, "POST")
+        XCTAssertNotNil(request.httpBody)
+        let body = String(data: request.httpBody!, encoding: .utf8)!
+        XCTAssertTrue(body.contains("method=\(LastFmMethod.unloveTrack.rawValue)"))
+        XCTAssertTrue(body.contains("artist=\(artist.addingPercentEncoding(withAllowedCharacters: characterSet)!)"))
+        XCTAssertTrue(body.contains("track=\(track.addingPercentEncoding(withAllowedCharacters: characterSet)!)"))
+        XCTAssertTrue(body.contains("api_key=\(apiKey)"))
+        XCTAssertTrue(body.contains("sk=\(sessionKey)"))
     }
 
 }

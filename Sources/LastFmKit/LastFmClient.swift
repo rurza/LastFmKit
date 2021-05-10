@@ -56,7 +56,7 @@ public class LastFmClient {
                               scrobbleDate: Date = Date())
     throws -> AnyPublisher<LastFmScrobbleTrackResponse, Error> {
         guard let sessionKey = sessionKey else { throw ClientError.sessionKeyNotSet }
-        let request = LastFmURLRequestsFactory.scrobbleTrack(withTitle: track,
+        let request = LastFmURLRequestsFactory.scrobbleTrackRequest(withTitle: track,
                                                              byArtist: artist,
                                                              albumArtist: albumArtist,
                                                              album: album,
@@ -66,6 +66,7 @@ public class LastFmClient {
                                                              sessionKey: sessionKey)
         return makeRequestPublisher(request, useCache: false)
     }
+    
     
     
     
