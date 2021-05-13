@@ -106,5 +106,16 @@ final class LastFmURLRequestsFactoryTests: XCTestCase {
         XCTAssertTrue(body.contains("api_key=\(apiKey)"))
         XCTAssertTrue(body.contains("sk=\(sessionKey)"))
     }
+    
+    func testGetUserInfoRequest() throws {
+        let username = "rurzynski"
+        let request = LastFmURLRequestsFactory.getUserInfo("rurzynski", apiKey: apiKey, secret: secret)
+        XCTAssertEqual(request.httpMethod, "POST")
+        XCTAssertNotNil(request.httpBody)
+        let body = String(data: request.httpBody!, encoding: .utf8)!
+        XCTAssertTrue(body.contains("method=\(LastFmMethod.getUserInfo.rawValue)"))
+        XCTAssertTrue(body.contains("user=\(username)"))
+
+    }
 
 }

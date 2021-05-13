@@ -13,6 +13,7 @@ enum LastFmMethod: String {
     case scrobbleTrack = "track.scrobble"
     case loveTrack = "track.love"
     case unloveTrack = "track.unlove"
+    case getUserInfo = "user.getInfo"
     
     func queryItem() -> URLQueryItem {
         return URLQueryItem(name: "method", value: rawValue)
@@ -84,6 +85,14 @@ struct LastFmURLRequestsFactory {
         return requestForComponents(components, apiKey: apiKey, secret: secret, sessionKey: sessionKey)
     }
     
+    static func getUserInfo(_ user: String, apiKey: String, secret: String) -> URLRequest {
+        var components = commonComponents()
+        components.queryItems = [
+            LastFmMethod.getUserInfo.queryItem(),
+            URLQueryItem(name: "user", value: user)
+        ]
+        return requestForComponents(components, apiKey: apiKey, secret: secret, sessionKey: nil)
+    }
 }
 
 // MARK: Private
