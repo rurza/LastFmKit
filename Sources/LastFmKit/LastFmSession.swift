@@ -8,9 +8,9 @@
 import Foundation
 
 public struct LastFmSession {
-    let name: String
-    let key: String
-    let subscriber: Int
+    public let name: String
+    public let key: String
+    public let subscriber: Int
 }
 
 extension LastFmSession: Codable {

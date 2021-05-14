@@ -9,10 +9,11 @@ import Foundation
 
 /// named execatly as a file in Resources
 enum FileName: String {
-    case userSession
+    case userSessionResponse
     case errorResponse
     case errorWithUnknownCodeResponse
     case scrobbleResponse
+    case userInfoResponse
 }
 
 extension Data {

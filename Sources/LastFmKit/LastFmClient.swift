@@ -67,7 +67,7 @@ public class LastFmClient {
         return makeRequestPublisher(request, useCache: false)
     }
     
-    
+//    public func getUserInfo(_ username: String) throws
     
     
 }

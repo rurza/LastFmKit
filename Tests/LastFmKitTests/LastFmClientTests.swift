@@ -20,8 +20,8 @@ final class LastFmClientTests: XCTestCase {
     }
     
     func testUserLogin() throws {
-        let sessionMock = try responseMock(for: .userSession, expectedType: LastFmSession.self)
-        client.dataTaskPublisher = DataTaskPublisherMock.responseFunctionForStub(with: .userSession)
+        let sessionMock = try responseMock(for: .userSessionResponse, expectedType: LastFmSession.self)
+        client.dataTaskPublisher = DataTaskPublisherMock.responseFunctionForStub(with: .userSessionResponse)
         client.logInUser("", password: "")
             .sink { completion in
                 XCTAssertTrue(Thread.isMainThread)
