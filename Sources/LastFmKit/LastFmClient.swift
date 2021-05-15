@@ -13,14 +13,13 @@ public protocol LastFmClientCacheProvider: AnyObject {
     func saveResponse<Resource: Codable>(_ response: Resource, forRequest req: URLRequest)
 }
 
-public class LastFmClient {
+public struct LastFmClient {
 
     public let secret: String
     public let apiKey: String
     public var sessionKey: String?
     public weak var cacheProvider: LastFmClientCacheProvider?
     
-    private lazy var jsonDecoder = JSONDecoder()
     public var dataTaskPublisher: (URLRequest) -> AnyPublisher<Data, URLError>
     
     public init(secret: String,
@@ -98,14 +97,15 @@ private extension LastFmClient {
                 future(.success(r))
             }.eraseToAnyPublisher()
         }
+        let decoder = JSONDecoder()
         return dataTaskPublisher(request)
-            .tryMap { [self] data in
-                if let serviceError = try? jsonDecoder.decode(LastFmError.self, from: data) {
+            .tryMap { data in
+                if let serviceError = try? decoder.decode(LastFmError.self, from: data) {
                     throw serviceError
                 }
                 return data
             }
-            .decode(type: Resource.self, decoder: jsonDecoder)
+            .decode(type: Resource.self, decoder: decoder)
             .map {
                 self.cacheProvider?.saveResponse($0, forRequest: request)
                 return $0
