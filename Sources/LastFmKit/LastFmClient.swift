@@ -17,19 +17,16 @@ public struct LastFmClient {
 
     public let secret: String
     public let apiKey: String
-    public var sessionKey: String?
     public weak var cacheProvider: LastFmClientCacheProvider?
     
     public var dataTaskPublisher: (URLRequest) -> AnyPublisher<Data, URLError>
     
     public init(secret: String,
                 apiKey: String,
-                sessionKey: String? = nil,
                 urlSession: URLSession = URLSession(configuration: .default),
                 cacheProvider: LastFmClientCacheProvider? = nil) {
         self.secret = secret
         self.apiKey = apiKey
-        self.sessionKey = sessionKey
         self.cacheProvider = cacheProvider
         dataTaskPublisher = { request in
             urlSession.dataTaskPublisher(for: request).map(\.data).eraseToAnyPublisher()
@@ -50,37 +47,42 @@ public struct LastFmClient {
                               byArtist artist: String,
                               albumArtist: String?,
                               album: String?,
-                              scrobbleDate: Date = Date())
-    throws -> AnyPublisher<LastFmScrobbleTrackResponse, Error> {
-        guard let sessionKey = sessionKey else { throw ClientError.sessionKeyNotSet }
+                              scrobbleDate: Date = Date(),
+                              sessionKey: String) -> AnyPublisher<LastFmScrobbleTrackResponse, Error> {
         let request = LastFmURLRequestsFactory.scrobbleTrackRequest(withTitle: track,
-                                                             byArtist: artist,
-                                                             albumArtist: albumArtist,
-                                                             album: album,
-                                                             scrobbleDate: scrobbleDate,
-                                                             apiKey: apiKey,
-                                                             secret: secret,
-                                                             sessionKey: sessionKey)
+                                                                    byArtist: artist,
+                                                                    albumArtist: albumArtist,
+                                                                    album: album,
+                                                                    scrobbleDate: scrobbleDate,
+                                                                    apiKey: apiKey,
+                                                                    secret: secret,
+                                                                    sessionKey: sessionKey)
         return makeRequestPublisher(request, useCache: false)
     }
     
-    public func loveTrack(_ track: String, byArtist artist: String) throws -> AnyPublisher<Void, Error> {
-        guard let sessionKey = sessionKey else { throw ClientError.sessionKeyNotSet }
-        let request = LastFmURLRequestsFactory.loveTrackRequest(withTitle: track, byArtist: artist, apiKey: apiKey, secret: secret, sessionKey: sessionKey)
-        return makeRequestPublisher(request, useCache: false)
-            .map { (empty: VoidCodable) -> Void in return }
-            .eraseToAnyPublisher()
-    }
-    
-    public func unloveTrack(_ track: String, byArtist artist: String) throws -> AnyPublisher<Void, Error> {
-        guard let sessionKey = sessionKey else { throw ClientError.sessionKeyNotSet }
-        let request = LastFmURLRequestsFactory.unloveTrackRequest(withTitle: track, byArtist: artist, apiKey: apiKey, secret: secret, sessionKey: sessionKey)
+    public func loveTrack(_ track: String, byArtist artist: String, sessionKey: String) -> AnyPublisher<Void, Error> {
+        let request = LastFmURLRequestsFactory.loveTrackRequest(withTitle: track,
+                                                                byArtist: artist,
+                                                                apiKey: apiKey,
+                                                                secret: secret,
+                                                                sessionKey: sessionKey)
         return makeRequestPublisher(request, useCache: false)
             .map { (empty: VoidCodable) -> Void in return }
             .eraseToAnyPublisher()
     }
     
-    public func getUserInfo(_ username: String) throws -> AnyPublisher<LastFmUserInfo, Error> {
+    public func unloveTrack(_ track: String, byArtist artist: String, sessionKey: String) -> AnyPublisher<Void, Error> {
+        let request = LastFmURLRequestsFactory.unloveTrackRequest(withTitle: track,
+                                                                  byArtist: artist,
+                                                                  apiKey: apiKey,
+                                                                  secret: secret,
+                                                                  sessionKey: sessionKey)
+        return makeRequestPublisher(request, useCache: false)
+            .map { (empty: VoidCodable) -> Void in return }
+            .eraseToAnyPublisher()
+    }
+    
+    public func getUserInfo(_ username: String) -> AnyPublisher<LastFmUserInfo, Error> {
         let request = LastFmURLRequestsFactory.getUserInfo(username, apiKey: apiKey, secret: secret)
         return makeRequestPublisher(request, useCache: false)
     }
