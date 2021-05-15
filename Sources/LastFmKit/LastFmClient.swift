@@ -20,9 +20,8 @@ public class LastFmClient {
     public var sessionKey: String?
     public weak var cacheProvider: LastFmClientCacheProvider?
     
-    private let session: URLSession
     private lazy var jsonDecoder = JSONDecoder()
-    public var dataTaskPublisher: ((URLRequest) -> AnyPublisher<Data, URLError>)!
+    public var dataTaskPublisher: (URLRequest) -> AnyPublisher<Data, URLError>
     
     public init(secret: String,
                 apiKey: String,
@@ -33,7 +32,6 @@ public class LastFmClient {
         self.apiKey = apiKey
         self.sessionKey = sessionKey
         self.cacheProvider = cacheProvider
-        self.session = urlSession
         dataTaskPublisher = { request in
             urlSession.dataTaskPublisher(for: request).map(\.data).eraseToAnyPublisher()
         }
