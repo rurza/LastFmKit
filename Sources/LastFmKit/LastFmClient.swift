@@ -67,7 +67,26 @@ public class LastFmClient {
         return makeRequestPublisher(request, useCache: false)
     }
     
-//    public func getUserInfo(_ username: String) throws
+    public func loveTrack(_ track: String, byArtist artist: String) throws -> AnyPublisher<Void, Error> {
+        guard let sessionKey = sessionKey else { throw ClientError.sessionKeyNotSet }
+        let request = LastFmURLRequestsFactory.loveTrackRequest(withTitle: track, byArtist: artist, apiKey: apiKey, secret: secret, sessionKey: sessionKey)
+        return makeRequestPublisher(request, useCache: false)
+            .map { (empty: VoidCodable) -> Void in return }
+            .eraseToAnyPublisher()
+    }
+    
+    public func unloveTrack(_ track: String, byArtist artist: String) throws -> AnyPublisher<Void, Error> {
+        guard let sessionKey = sessionKey else { throw ClientError.sessionKeyNotSet }
+        let request = LastFmURLRequestsFactory.unloveTrackRequest(withTitle: track, byArtist: artist, apiKey: apiKey, secret: secret, sessionKey: sessionKey)
+        return makeRequestPublisher(request, useCache: false)
+            .map { (empty: VoidCodable) -> Void in return }
+            .eraseToAnyPublisher()
+    }
+    
+    public func getUserInfo(_ username: String) throws -> AnyPublisher<LastFmUserInfo, Error> {
+        let request = LastFmURLRequestsFactory.getUserInfo(username, apiKey: apiKey, secret: secret)
+        return makeRequestPublisher(request, useCache: false)
+    }
     
     
 }
@@ -83,7 +102,6 @@ private extension LastFmClient {
         }
         return dataTaskPublisher(request)
             .tryMap { [self] data in
-                print(String(data: data, encoding: .utf8)!)
                 if let serviceError = try? jsonDecoder.decode(LastFmError.self, from: data) {
                     throw serviceError
                 }

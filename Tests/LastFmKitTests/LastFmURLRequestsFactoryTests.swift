@@ -115,7 +115,6 @@ final class LastFmURLRequestsFactoryTests: XCTestCase {
         let body = String(data: request.httpBody!, encoding: .utf8)!
         XCTAssertTrue(body.contains("method=\(LastFmMethod.getUserInfo.rawValue)"))
         XCTAssertTrue(body.contains("user=\(username)"))
-
     }
 
 }
