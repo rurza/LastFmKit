@@ -7,24 +7,7 @@
     "subscriber": "0",
     "url": "https://www.last.fm/user/rurzynski",
     "country": "Poland",
-    "image": [
-      {
-        "size": "small",
-        "#text": "https://lastfm.freetls.fastly.net/i/u/34s/7ac97265fe623399d998807070e3c504.png"
-      },
-      {
-        "size": "medium",
-        "#text": "https://lastfm.freetls.fastly.net/i/u/64s/7ac97265fe623399d998807070e3c504.png"
-      },
-      {
-        "size": "large",
-        "#text": "https://lastfm.freetls.fastly.net/i/u/174s/7ac97265fe623399d998807070e3c504.png"
-      },
-      {
-        "size": "extralarge",
-        "#text": "https://lastfm.freetls.fastly.net/i/u/300x300/7ac97265fe623399d998807070e3c504.png"
-      }
-    ],
+    "image": null,
     "registered": {
       "unixtime": "1216502319",
       "#text": 1216502319
