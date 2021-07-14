@@ -17,7 +17,7 @@ public struct LastFmImage: Codable, Equatable {
         case small
         case medium
         case large
-        case extraLarge
+        case extraLarge = "extralarge"
     }
     
 }

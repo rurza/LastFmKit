@@ -15,7 +15,7 @@ public struct LastFmUserInfo: Codable, Equatable {
     public let country: String
     public let subscriber: Bool
     public var realName: String?
-    public var image: [LastFmImage]?
+    public var images: [LastFmImage]?
     public let registeredDate: Date
 }
 
@@ -45,6 +45,7 @@ extension LastFmUserInfo {
         realName = try user.decode(String?.self, forKey: .realName)
         let registered = try user.nestedContainer(keyedBy: CodingKeys.self, forKey: .registeredDate)
         registeredDate = Date(timeIntervalSince1970: try registered.decode(TimeInterval.self, forKey: .text))
+        images = try user.decode([LastFmImage]?.self, forKey: .images)
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -58,8 +59,8 @@ extension LastFmUserInfo {
         try user.encode(country, forKey: .country)
         try user.encode(subscriber ? "1" : "0", forKey: .subscriber)
         try user.encode(realName, forKey: .realName)
-        var image = user.nestedUnkeyedContainer(forKey: .image)
-        try image.encode(self.image)
+//        var image = user.nestedUnkeyedContainer(forKey: .images)
+        try user.encode(images, forKey: .images)
         var date = user.nestedContainer(keyedBy: CodingKeys.self, forKey: .registeredDate)
         try date.encode(registeredDate.timeIntervalSince1970, forKey: .text)
     }
@@ -71,7 +72,7 @@ extension LastFmUserInfo {
         case name
         case url
         case country
-        case image
+        case images = "image"
         case registeredDate = "registered"
         case subscriber
         case user

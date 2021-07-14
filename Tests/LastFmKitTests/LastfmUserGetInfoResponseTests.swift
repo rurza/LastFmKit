@@ -19,4 +19,11 @@ final class LastfmUserGetInfoResponseTests: XCTestCase {
         let backResponse = try decoder.decode(LastFmUserInfo.self, from: data)
         XCTAssertEqual(backResponse, response)
     }
+    
+    func testUserInfoWithoutAvatar() throws {
+        let response = try decoder.decode(LastFmUserInfo.self, from: Data.dataFrom(.userInfoWithoutAvatarResponse))
+        let data = try encoder.encode(response)
+        let backResponse = try decoder.decode(LastFmUserInfo.self, from: data)
+        XCTAssertEqual(backResponse, response)
+    }
 }

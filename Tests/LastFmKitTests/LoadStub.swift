@@ -15,6 +15,7 @@ enum FileName: String {
     case scrobbleResponse
     case userInfoResponse
     case emptyResponse
+    case userInfoWithoutAvatarResponse
 }
 
 extension Data {
