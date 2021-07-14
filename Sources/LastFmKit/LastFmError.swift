@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct LastFmError: Error, Codable {
-    let error: Code?
-    let message: String
+public struct LastFmError: Error, Equatable {
+    public let error: Code?
+    public let message: String
 
     public enum Code: Int, Codable {
         case invalidService = 2
@@ -29,9 +29,9 @@ struct LastFmError: Error, Codable {
     }
 }
 
-extension LastFmError {
+extension LastFmError: Codable {
     
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let errorCode = try container.decode(Int.self, forKey: .error)
         error = Code(rawValue: errorCode)

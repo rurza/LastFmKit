@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct LastFmSession {
+public struct LastFmSession: Equatable {
     public let name: String
     public let key: String
     public let subscriber: Int
