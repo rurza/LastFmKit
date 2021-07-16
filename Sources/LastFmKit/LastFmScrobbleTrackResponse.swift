@@ -16,8 +16,8 @@ public struct LastFmScrobbleTrackResponse: Codable {
     public let scrobbleDate: Date?
     
     public struct Correction: Codable {
-        let isCorrected: Bool
-        let value: String
+        public let isCorrected: Bool
+        public let value: String
     }
 
 
