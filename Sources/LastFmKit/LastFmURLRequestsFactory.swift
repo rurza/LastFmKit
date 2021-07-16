@@ -14,6 +14,7 @@ enum LastFmMethod: String {
     case loveTrack = "track.love"
     case unloveTrack = "track.unlove"
     case getUserInfo = "user.getInfo"
+    case updateNowPlaying = "track.updateNowPlaying"
     
     func queryItem() -> URLQueryItem {
         return URLQueryItem(name: "method", value: rawValue)
@@ -92,6 +93,26 @@ struct LastFmURLRequestsFactory {
             URLQueryItem(name: "user", value: user)
         ]
         return requestForComponents(components, apiKey: apiKey, secret: secret, sessionKey: nil)
+    }
+    
+    static func updateNowPlaying(withTitle title: String,
+                                 byArtist artist: String,
+                                 album: String?,
+                                 apiKey: String,
+                                 secret: String,
+                                 sessionKey: String) -> URLRequest {
+        var components = commonComponents()
+        
+        var queryItems = [
+            LastFmMethod.updateNowPlaying.queryItem(),
+            URLQueryItem(name: "artist", value: artist),
+            URLQueryItem(name: "track", value: title)
+        ]
+        if let album = album {
+            queryItems.append(URLQueryItem(name: "album", value: album))
+        }
+        components.queryItems = queryItems
+        return requestForComponents(components, apiKey: apiKey, secret: secret, sessionKey: sessionKey)
     }
 }
 

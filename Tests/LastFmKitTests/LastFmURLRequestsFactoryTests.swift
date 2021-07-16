@@ -12,7 +12,7 @@ final class LastFmURLRequestsFactoryTests: XCTestCase {
     
     let secret = "secret"
     let apiKey = "stupidApiKey"
-    let session = "last_fm_session"
+//    let session = "last_fm_session"
     let sessionKey = "t9q4raia2sl2_YwDBaQ2-f_dCXjGV-44"
     
     func testCommonURLComponents() throws {
@@ -117,4 +117,35 @@ final class LastFmURLRequestsFactoryTests: XCTestCase {
         XCTAssertTrue(body.contains("user=\(username)"))
     }
 
+    func testUpdateNowPlayingRequest() throws {
+        let characterSet = CharacterSet.urlQueryAllowed
+        let track = "Suite from ''Hymn of the Highlands'': Lairg Muir"
+        let artist = "Osamu TAKAHASHI Kiyotaka Noda"
+        let request = LastFmURLRequestsFactory.updateNowPlaying(withTitle: track, byArtist: artist, album: nil, apiKey: apiKey, secret: secret, sessionKey: sessionKey)
+        XCTAssertEqual(request.httpMethod, "POST")
+        XCTAssertNotNil(request.httpBody)
+        let body = String(data: request.httpBody!, encoding: .utf8)!
+        XCTAssertTrue(body.contains("method=\(LastFmMethod.updateNowPlaying.rawValue)"))
+        XCTAssertTrue(body.contains("artist=\(artist.addingPercentEncoding(withAllowedCharacters: characterSet)!)"))
+        XCTAssertTrue(body.contains("track=\(track.addingPercentEncoding(withAllowedCharacters: characterSet)!)"))
+        XCTAssertTrue(body.contains("api_key=\(apiKey)"))
+        XCTAssertTrue(body.contains("sk=\(sessionKey)"))
+    }
+    
+    func testUpdateNowPlayingWithAlbumRequest() throws {
+        let characterSet = CharacterSet.urlQueryAllowed
+        let track = "Suite from ''Hymn of the Highlands'': Lairg Muir"
+        let artist = "Osamu TAKAHASHI Kiyotaka Noda"
+        let album = "Ode for Trumpet"
+        let request = LastFmURLRequestsFactory.updateNowPlaying(withTitle: track, byArtist: artist, album: album, apiKey: apiKey, secret: secret, sessionKey: sessionKey)
+        XCTAssertEqual(request.httpMethod, "POST")
+        XCTAssertNotNil(request.httpBody)
+        let body = String(data: request.httpBody!, encoding: .utf8)!
+        XCTAssertTrue(body.contains("method=\(LastFmMethod.updateNowPlaying.rawValue)"))
+        XCTAssertTrue(body.contains("artist=\(artist.addingPercentEncoding(withAllowedCharacters: characterSet)!)"))
+        XCTAssertTrue(body.contains("track=\(track.addingPercentEncoding(withAllowedCharacters: characterSet)!)"))
+        XCTAssertTrue(body.contains("album=\(album.addingPercentEncoding(withAllowedCharacters: characterSet)!)"))
+        XCTAssertTrue(body.contains("api_key=\(apiKey)"))
+        XCTAssertTrue(body.contains("sk=\(sessionKey)"))
+    }
 }

@@ -87,6 +87,21 @@ public struct LastFmClient {
         return makeRequestPublisher(request, useCache: false)
     }
     
+    public func updateNowPlayingForTrack(_ track: String,
+                                         byArtist artist: String,
+                                         album: String?,
+                                         sessionKey: String)
+    -> AnyPublisher<Void, Error> {
+        let request = LastFmURLRequestsFactory.updateNowPlaying(withTitle: track,
+                                                                byArtist: artist,
+                                                                album: album,
+                                                                apiKey: apiKey,
+                                                                secret: secret,
+                                                                sessionKey: sessionKey)
+        return makeRequestPublisher(request, useCache: false)
+            .map { (empty: VoidCodable) -> Void in return }
+            .eraseToAnyPublisher()
+    }
     
 }
 
