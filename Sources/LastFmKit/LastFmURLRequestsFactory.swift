@@ -138,7 +138,7 @@ extension LastFmURLRequestsFactory {
         let body = components.percentEncodedQuery!.data(using: .utf8)
         components.query = nil
         // we'll always generate the URL (hopefully :D)
-        var request = URLRequest(url: components.url!, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 20)
+        var request = URLRequest(url: components.url!, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
         request.httpMethod = "POST"
         request.httpBody = body
         return request
