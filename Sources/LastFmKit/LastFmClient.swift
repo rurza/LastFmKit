@@ -102,6 +102,22 @@ public struct LastFmClient {
             .map { (empty: VoidCodable) -> Void in return }
             .eraseToAnyPublisher()
     }
+
+    public func getRecentTracks(_ user: String,
+                                limit: Int? = nil,
+                                page: Int? = nil,
+                                extendedInfo: Bool? = nil,
+                                fromDate: Date? = nil,
+                                toDate: Date? = nil) -> AnyPublisher<Void, Error> {
+        let request = LastFmURLRequestsFactory.getRecentTracks(user, limit: limit, page: page,
+                                                               extendedInfo: extendedInfo,
+                                                               fromDate: fromDate,
+                                                               toDate: toDate,
+                                                               apiKey: apiKey,
+                                                               secret: secret)
+        return makeRequestPublisher(request).map { (void: VoidCodable) -> Void in return }
+        .eraseToAnyPublisher()
+    }
     
 }
 
@@ -120,6 +136,7 @@ private extension LastFmClient {
                 if let serviceError = try? decoder.decode(LastFmError.self, from: data) {
                     throw serviceError
                 }
+                print(String(data: data, encoding: .utf8)!)
                 return data
             }
             .decode(type: Resource.self, decoder: decoder)

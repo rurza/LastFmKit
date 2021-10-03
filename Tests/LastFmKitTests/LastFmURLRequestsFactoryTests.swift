@@ -148,4 +148,23 @@ final class LastFmURLRequestsFactoryTests: XCTestCase {
         XCTAssertTrue(body.contains("api_key=\(apiKey)"))
         XCTAssertTrue(body.contains("sk=\(sessionKey)"))
     }
+
+    func testGetRecentTrackRequest() throws {
+        let user = "rurzynski"
+        let fromDate = Date(timeIntervalSinceNow: -60*60*24*7)
+        let toDate = Date()
+        let limit = 100
+        let request = LastFmURLRequestsFactory.getRecentTracks(user, limit: limit, page: 1, extendedInfo: true, fromDate: fromDate, toDate: toDate, apiKey: apiKey, secret: secret)
+        XCTAssertEqual(request.httpMethod, "POST")
+        XCTAssertNotNil(request.httpBody)
+        let body = String(data: request.httpBody!, encoding: .utf8)!
+        XCTAssertTrue(body.contains("api_key=\(apiKey)"))
+        XCTAssertTrue(body.contains("method=\(LastFmMethod.getRecentTracks.rawValue)"))
+        XCTAssertTrue(body.contains("from=\(fromDate.timeIntervalSince1970)"))
+        XCTAssertTrue(body.contains("to=\(toDate.timeIntervalSince1970)"))
+        XCTAssertTrue(body.contains("user=\(user)"))
+        XCTAssertTrue(body.contains("extended=\(1)"))
+        XCTAssertTrue(body.contains("limit=\(limit)"))
+        XCTAssertTrue(body.contains("page=\(1)"))
+    }
 }

@@ -13,8 +13,9 @@ enum LastFmMethod: String {
     case scrobbleTrack = "track.scrobble"
     case loveTrack = "track.love"
     case unloveTrack = "track.unlove"
-    case getUserInfo = "user.getInfo"
     case updateNowPlaying = "track.updateNowPlaying"
+    case getUserInfo = "user.getInfo"
+    case getRecentTracks = "user.getRecentTracks"
     
     func queryItem() -> URLQueryItem {
         return URLQueryItem(name: "method", value: rawValue)
@@ -85,15 +86,7 @@ struct LastFmURLRequestsFactory {
         ]
         return requestForComponents(components, apiKey: apiKey, secret: secret, sessionKey: sessionKey)
     }
-    
-    static func getUserInfo(_ user: String, apiKey: String, secret: String) -> URLRequest {
-        var components = commonComponents()
-        components.queryItems = [
-            LastFmMethod.getUserInfo.queryItem(),
-            URLQueryItem(name: "user", value: user)
-        ]
-        return requestForComponents(components, apiKey: apiKey, secret: secret, sessionKey: nil)
-    }
+
     
     static func updateNowPlaying(withTitle title: String,
                                  byArtist artist: String,
@@ -113,6 +106,48 @@ struct LastFmURLRequestsFactory {
         }
         components.queryItems = queryItems
         return requestForComponents(components, apiKey: apiKey, secret: secret, sessionKey: sessionKey)
+    }
+
+    // MARK: - user
+    static func getUserInfo(_ user: String, apiKey: String, secret: String) -> URLRequest {
+        var components = commonComponents()
+        components.queryItems = [
+            LastFmMethod.getUserInfo.queryItem(),
+            URLQueryItem(name: "user", value: user)
+        ]
+        return requestForComponents(components, apiKey: apiKey, secret: secret, sessionKey: nil)
+    }
+
+    static func getRecentTracks(_ user: String,
+                                limit: Int? = nil,
+                                page: Int? = nil,
+                                extendedInfo: Bool? = nil,
+                                fromDate: Date? = nil,
+                                toDate: Date? = nil,
+                                apiKey: String,
+                                secret: String) -> URLRequest {
+        var components = commonComponents()
+        var queryItems = [
+            LastFmMethod.getRecentTracks.queryItem(),
+            URLQueryItem(name: "user", value: user)
+        ]
+        if let limit = limit {
+            queryItems.append(URLQueryItem(name: "limit", value: "\(limit)"))
+        }
+        if let page = page {
+            queryItems.append(URLQueryItem(name: "page", value: "\(page)"))
+        }
+        if let extendedInfo = extendedInfo {
+            queryItems.append(URLQueryItem(name: "extended", value: extendedInfo ? "1" : "0"))
+        }
+        if let fromDate = fromDate {
+            queryItems.append(URLQueryItem(name: "from", value: "\(fromDate.timeIntervalSince1970)"))
+        }
+        if let toDate = toDate {
+            queryItems.append(URLQueryItem(name: "to", value: "\(toDate.timeIntervalSince1970)"))
+        }
+        components.queryItems = queryItems
+        return requestForComponents(components, apiKey: apiKey, secret: secret, sessionKey: nil)
     }
 }
 
