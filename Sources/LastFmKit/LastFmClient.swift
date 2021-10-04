@@ -106,15 +106,14 @@ public struct LastFmClient {
                                 page: Int? = nil,
                                 extendedInfo: Bool? = nil,
                                 fromDate: Date? = nil,
-                                toDate: Date? = nil) -> AnyPublisher<Void, Error> {
+                                toDate: Date? = nil) -> AnyPublisher<LastFmRecentTracksResponse, Error> {
         let request = LastFmURLRequestsFactory.getRecentTracks(user, limit: limit, page: page,
                                                                extendedInfo: extendedInfo,
                                                                fromDate: fromDate,
                                                                toDate: toDate,
                                                                apiKey: apiKey,
                                                                secret: secret)
-        return makeRequestPublisher(request).map { (void: VoidCodable) -> Void in return }
-        .eraseToAnyPublisher()
+        return makeRequestPublisher(request).eraseToAnyPublisher()
     }
     
 }

@@ -43,7 +43,7 @@ public struct LastFmTrack: Codable {
         } else {
             isStreamable = nil
         }
-        if let lovedInt = Int(try container.decode(String.self, forKey: .isLoved)) {
+        if let lovedString = try container.decode(String?.self, forKey: .isLoved), let lovedInt = Int(lovedString) {
             isLoved = lovedInt != 0
         } else {
             isLoved = nil
