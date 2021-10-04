@@ -44,7 +44,7 @@ extension LastFmUserInfo {
         }
         realName = try user.decode(String?.self, forKey: .realName)
         let registered = try user.nestedContainer(keyedBy: CodingKeys.self, forKey: .registeredDate)
-        registeredDate = Date(timeIntervalSince1970: try registered.decode(TimeInterval.self, forKey: .text))
+        registeredDate = try registered.decode(Date.self, forKey: .text)
         images = try user.decode([LastFmImage]?.self, forKey: .images)
     }
     
@@ -59,10 +59,9 @@ extension LastFmUserInfo {
         try user.encode(country, forKey: .country)
         try user.encode(subscriber ? "1" : "0", forKey: .subscriber)
         try user.encode(realName, forKey: .realName)
-//        var image = user.nestedUnkeyedContainer(forKey: .images)
         try user.encode(images, forKey: .images)
         var date = user.nestedContainer(keyedBy: CodingKeys.self, forKey: .registeredDate)
-        try date.encode(registeredDate.timeIntervalSince1970, forKey: .text)
+        try date.encode(registeredDate, forKey: .text)
     }
     
     enum CodingKeys: String, CodingKey {

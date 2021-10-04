@@ -18,7 +18,6 @@ public struct LastFmClient {
     public let secret: String
     public let apiKey: String
     public weak var cacheProvider: LastFmClientCacheProvider?
-    
     public var dataTaskPublisher: (URLRequest) -> AnyPublisher<Data, URLError>
     
     public init(secret: String,
@@ -32,8 +31,7 @@ public struct LastFmClient {
             urlSession.dataTaskPublisher(for: request).map(\.data).eraseToAnyPublisher()
         }
     }
-    
-    
+
     public func logInUser(_ username: String, password: String)
     -> AnyPublisher<LastFmSession, Error> {
         let request = LastFmURLRequestsFactory.logInUserRequest(withUsername: username,
@@ -131,6 +129,7 @@ private extension LastFmClient {
             }.eraseToAnyPublisher()
         }
         let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .secondsSince1970
         return dataTaskPublisher(request)
             .tryMap { data in
                 if let serviceError = try? decoder.decode(LastFmError.self, from: data) {

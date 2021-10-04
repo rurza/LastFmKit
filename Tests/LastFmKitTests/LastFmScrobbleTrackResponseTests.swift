@@ -10,8 +10,17 @@ import XCTest
 
 final class LastFmScrobbleTrackResponseTests: XCTestCase {
     
-    let decoder = JSONDecoder()
-    let encoder = JSONEncoder()
+    let decoder: JSONDecoder = {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .secondsSince1970
+        return decoder
+    }()
+
+    let encoder: JSONEncoder = {
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .secondsSince1970
+        return encoder
+    }()
     
     func testScrobbleMarshalling() throws {
         let response = try responseMock(for: .scrobbleResponse, expectedType: LastFmScrobbleTrackResponse.self)

@@ -43,6 +43,7 @@ extension LastFmScrobbleTrackResponse {
         albumArtist = try scrobble.decode(Correction.self, forKey: .albumArtist)
         album = try scrobble.decode(Correction.self, forKey: .album)
         track = try scrobble.decode(Correction.self, forKey: .track)
+        // the timestamp is a String :/
         let timestampString = try scrobble.decode(String.self, forKey: .timestamp)
         if let timestamp = TimeInterval(timestampString) {
             scrobbleDate = Date(timeIntervalSince1970: timestamp)
