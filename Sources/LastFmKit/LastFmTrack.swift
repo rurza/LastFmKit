@@ -60,6 +60,22 @@ public struct LastFmTrack: Codable {
     }
 
     public func encode(to encoder: Encoder) throws {
-        #warning("implement")
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(name, forKey: .name)
+        try container.encode(url, forKey: .url)
+        try container.encode(mbid, forKey: .mbid)
+        if let isStreamable = isStreamable {
+            try container.encode("\(isStreamable ? 1 : 0)", forKey: .isStreamable)
+        }
+        if let isLoved = isLoved {
+            try container.encode("\(isLoved ? 1 : 0)", forKey: .isLoved)
+        }
+        if let date = date {
+            var dateContainer = container.nestedContainer(keyedBy: DateKeys.self, forKey: .date)
+            try dateContainer.encode("\(date.timeIntervalSince1970)", forKey: .date)
+        }
+        try container.encode(images, forKey: .images)
+        try container.encode(artist, forKey: .artist)
+        try container.encode(album, forKey: .album)
     }
 }
