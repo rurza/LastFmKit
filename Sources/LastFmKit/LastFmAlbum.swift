@@ -7,8 +7,8 @@
 import Foundation
 
 public struct LastFmAlbum: Codable {
-    let title: String
-    let mbid: String
+    public let title: String
+    public let mbid: String
 
     enum CodingKeys: String, CodingKey {
         case title = "#text"
