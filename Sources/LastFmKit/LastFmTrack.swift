@@ -48,9 +48,14 @@ public struct LastFmTrack: Codable {
         } else {
             isLoved = nil
         }
-        let dateContainer = try container.nestedContainer(keyedBy: DateKeys.self, forKey: .date)
-        if let dateDouble = TimeInterval(try dateContainer.decode(String.self, forKey: .date)) {
-            date = Date(timeIntervalSince1970: dateDouble)
+        // ie track isn't scrobbled yet but has "now playing" status
+        if container.contains(.date) {
+            let dateContainer = try container.nestedContainer(keyedBy: DateKeys.self, forKey: .date)
+            if let stringDate = try dateContainer.decode(String?.self, forKey: .date), let dateDouble = TimeInterval(stringDate) {
+                date = Date(timeIntervalSince1970: dateDouble)
+            } else {
+                date = nil
+            }
         } else {
             date = nil
         }
