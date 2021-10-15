@@ -134,7 +134,6 @@ private extension LastFmClient {
                 if let serviceError = try? decoder.decode(LastFmError.self, from: data) {
                     throw serviceError
                 }
-                print(String(data: data, encoding: .utf8)!)
                 return data
             }
             .decode(type: Resource.self, decoder: decoder)

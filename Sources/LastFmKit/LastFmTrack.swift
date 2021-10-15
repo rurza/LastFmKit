@@ -6,7 +6,7 @@
 
 import Foundation
 
-public struct LastFmTrack: Codable {
+public struct LastFmTrack: Codable, Equatable {
     public let name: String
     public let url: URL
     public let mbid: String

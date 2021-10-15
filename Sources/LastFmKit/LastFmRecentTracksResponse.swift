@@ -6,7 +6,7 @@
 
 import Foundation
 
-public struct LastFmRecentTracksResponse: Codable {
+public struct LastFmRecentTracksResponse: Codable, Equatable {
     public let page: Int?
     public let perPage: Int?
     public let total: Int?

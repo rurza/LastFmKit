@@ -6,7 +6,7 @@
 
 import Foundation
 
-public struct LastFmAlbum: Codable {
+public struct LastFmAlbum: Codable, Equatable {
     public let title: String
     public let mbid: String
 

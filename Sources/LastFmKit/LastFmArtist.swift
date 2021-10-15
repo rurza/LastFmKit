@@ -6,7 +6,7 @@
 
 import Foundation
 
-public struct LastFmArtist: Codable {
+public struct LastFmArtist: Codable, Equatable {
     public let url: URL
     public let name: String
     public let images: [LastFmImage]
