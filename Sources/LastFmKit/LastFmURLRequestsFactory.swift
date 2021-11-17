@@ -170,7 +170,11 @@ extension LastFmURLRequestsFactory {
         var components = components
         components.queryItems = queryItems
         // we'll always have the query so it's safe to unwrap it here
-        let body = components.percentEncodedQuery!.data(using: .utf8)
+        let allowedCharacters = CharacterSet(charactersIn: "+").inverted
+        let bodyString = components
+            .percentEncodedQuery!
+            .addingPercentEncoding(withAllowedCharacters: allowedCharacters)!
+        let body = bodyString.data(using: .utf8)
         components.query = nil
         // we'll always generate the URL (hopefully :D)
         var request = URLRequest(url: components.url!, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
@@ -187,7 +191,7 @@ extension LastFmURLRequestsFactory {
         // Sort all items by name
         let sortedQueryItems = sortedParams(for: queryItems)
         // Join all pairs of name/value into one string
-        let methodSignature = sortedQueryItems.map { "\($0.name)\($0.value ?? "")"}.joined()
+        let methodSignature = sortedQueryItems.map { "\($0.name)\($0.value ?? "")" }.joined()
         // Append secret
         let methodSignatureWithSecret = methodSignature + secret
         // Serialize
