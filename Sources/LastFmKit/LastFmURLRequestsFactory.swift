@@ -16,6 +16,8 @@ enum LastFmMethod: String {
     case updateNowPlaying = "track.updateNowPlaying"
     case getUserInfo = "user.getInfo"
     case getRecentTracks = "user.getRecentTracks"
+    case getSimilarArtists = "artist.getSimilar"
+    case getSimilarTracks = "track.getSimilar"
     
     func queryItem() -> URLQueryItem {
         return URLQueryItem(name: "method", value: rawValue)
@@ -149,6 +151,20 @@ struct LastFmURLRequestsFactory {
         components.queryItems = queryItems
         return requestForComponents(components, apiKey: apiKey, secret: secret, sessionKey: nil)
     }
+    
+    static func getSimilarArtists(_ artist: String, limit: Int?, apiKey: String, secret: String) -> URLRequest {
+        var components = commonComponents()
+        var queryItems = [
+            LastFmMethod.getSimilarArtists.queryItem(),
+            URLQueryItem(name: "artist", value: artist)
+        ]
+        if let limit = limit {
+            queryItems.append(URLQueryItem(name: "limit", value: "\(limit)"))
+        }
+        components.queryItems = queryItems
+        return requestForComponents(components, apiKey: apiKey, secret: secret, sessionKey: nil)
+    }
+
 }
 
 // MARK: Private
@@ -170,6 +186,7 @@ extension LastFmURLRequestsFactory {
         var components = components
         components.queryItems = queryItems
         // we'll always have the query so it's safe to unwrap it here
+        // potential troublesome characters: !*'();:@&=$,/?%#[]
         let allowedCharacters = CharacterSet(charactersIn: "+").inverted
         let bodyString = components
             .percentEncodedQuery!

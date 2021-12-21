@@ -167,4 +167,17 @@ final class LastFmURLRequestsFactoryTests: XCTestCase {
         XCTAssertTrue(body.contains("limit=\(limit)"))
         XCTAssertTrue(body.contains("page=\(1)"))
     }
+    
+    func testGetSimilarArtistsRequest() throws {
+        let artist = "Tool"
+        let limit = 10
+        let request = LastFmURLRequestsFactory.getSimilarArtists(artist, limit: limit, apiKey: apiKey, secret: secret)
+        XCTAssertEqual(request.httpMethod, "POST")
+        XCTAssertNotNil(request.httpBody)
+        let body = String(data: request.httpBody!, encoding: .utf8)!
+        XCTAssertTrue(body.contains("api_key=\(apiKey)"))
+        XCTAssertTrue(body.contains("method=\(LastFmMethod.getSimilarArtists.rawValue)"))
+        XCTAssertTrue(body.contains("limit=\(limit)"))
+        XCTAssertTrue(body.contains("artist=\(artist)"))
+    }
 }
