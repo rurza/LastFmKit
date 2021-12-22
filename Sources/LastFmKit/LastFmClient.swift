@@ -126,6 +126,19 @@ public struct LastFmClient {
         let request = LastFmURLRequestsFactory.getSimilarArtists(toArtist: artist, limit: limit, apiKey: apiKey, secret: secret)
         return makeRequestPublisher(request, useCache: true).eraseToAnyPublisher()
     }
+
+    public func getTopAlbums(ofUser user: String,
+                             period: LastFmPeriod = .overall,
+                             limit: Int? = nil,
+                             page: Int? = nil) -> AnyPublisher<LastFmTopAlbumsResponse, Error> {
+        let request = LastFmURLRequestsFactory.getTopAlbums(ofUser: user,
+                                                            period: period,
+                                                            limit: limit,
+                                                            page: page,
+                                                            apiKey: apiKey,
+                                                            secret: secret)
+        return makeRequestPublisher(request, useCache: false)
+    }
     
 }
 

@@ -9,9 +9,9 @@ import Foundation
 
 public enum LastFmPeriod: String {
     case overall
-    case sevenDays = "7day"
-    case oneMonth = "1month"
-    case threeMonths = "3month"
-    case sixMonths = "6month"
+    case week = "7day"
+    case month = "1month"
+    case quarter = "3month"
+    case halfYear = "6month"
     case year = "12month"
 }

@@ -191,7 +191,8 @@ struct LastFmURLRequestsFactory {
         var components = commonComponents()
         var queryItems = [
             LastFmMethod.getTopAlbums.queryItem(),
-            URLQueryItem(name: "user", value: user)
+            URLQueryItem(name: "user", value: user),
+            URLQueryItem(name: "period", value: period.rawValue)
         ]
         if let limit = limit {
             queryItems.append(URLQueryItem(name: "limit", value: "\(limit)"))
