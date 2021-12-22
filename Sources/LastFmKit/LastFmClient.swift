@@ -18,7 +18,7 @@ public struct LastFmClient {
     public let secret: String
     public let apiKey: String
     public weak var cacheProvider: LastFmClientCacheProvider?
-    public var dataTaskPublisher: (URLRequest) -> AnyPublisher<Data, URLError>
+    public var dataTaskPublisher: (URLRequest, Bool) -> AnyPublisher<Data, URLError>
     
     public init(secret: String,
                 apiKey: String,
@@ -27,8 +27,9 @@ public struct LastFmClient {
         self.secret = secret
         self.apiKey = apiKey
         self.cacheProvider = cacheProvider
-        dataTaskPublisher = { request in
-            urlSession.dataTaskPublisher(for: request).map(\.data).eraseToAnyPublisher()
+        dataTaskPublisher = { request, useCache in
+            urlSession.configuration.requestCachePolicy = useCache ? .returnCacheDataElseLoad : .reloadIgnoringLocalAndRemoteCacheData
+            return urlSession.dataTaskPublisher(for: request).map(\.data).eraseToAnyPublisher()
         }
     }
 
@@ -118,7 +119,12 @@ public struct LastFmClient {
 
     public func getSimilarTracks(toTrack track: String, byArtist artist: String, limit: Int? = nil) -> AnyPublisher<LastFmSimilarTracksResponse, Error> {
         let request = LastFmURLRequestsFactory.getSimilarTracks(to: track, by: artist, limit: limit, apiKey: apiKey, secret: secret)
-        return makeRequestPublisher(request).eraseToAnyPublisher()
+        return makeRequestPublisher(request, useCache: true).eraseToAnyPublisher()
+    }
+
+    public func getSimilarArtists(toArtist artist: String, limit: Int? = nil) -> AnyPublisher<LastFmSimilarArtistsReponse, Error> {
+        let request = LastFmURLRequestsFactory.getSimilarArtists(artist, limit: limit, apiKey: apiKey, secret: secret)
+        return makeRequestPublisher(request, useCache: true).eraseToAnyPublisher()
     }
     
 }
@@ -134,7 +140,7 @@ private extension LastFmClient {
         }
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .secondsSince1970
-        return dataTaskPublisher(request)
+        return dataTaskPublisher(request, useCache)
             .tryMap { data in
                 if let serviceError = try? decoder.decode(LastFmError.self, from: data) {
                     throw serviceError

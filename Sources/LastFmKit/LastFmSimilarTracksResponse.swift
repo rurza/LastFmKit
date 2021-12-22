@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct LastFmSimilarTracksResponse: Codable {
+public struct LastFmSimilarTracksResponse: Codable, Equatable {
     public let tracks: [LastFmSimilarTrack]
     public let artist: String
 }

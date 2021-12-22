@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct LastFmSimilarTrack: Codable {
+public struct LastFmSimilarTrack: Codable, Equatable {
     public let title: String
     public let playCount: Int
     public let url: URL?

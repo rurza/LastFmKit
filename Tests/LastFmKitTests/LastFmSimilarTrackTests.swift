@@ -24,4 +24,12 @@ final class LastFmSimilarTrackTests: XCTestCase {
         XCTAssertEqual(track.artist?.name, "Cher")
         XCTAssertEqual(track.images?.count, 6)
     }
+
+    func testEncoding() throws {
+        let data = Data.dataFrom(.similarTrack)
+        let track = try decoder.decode(LastFmSimilarTrack.self, from: data)
+        let encoded = try encoder.encode(track)
+        let track2 = try decoder.decode(LastFmSimilarTrack.self, from: encoded)
+        XCTAssertEqual(track2, track)
+    }
 }

@@ -58,8 +58,8 @@ final class LastFmClientTests: XCTestCase {
 }
 
 enum DataTaskPublisherMock {
-    static func responseFunctionForStub(with fileName: FileName) -> (URLRequest) -> AnyPublisher<Data, URLError> {
-        return { request in
+    static func responseFunctionForStub(with fileName: FileName) -> (URLRequest, Bool) -> AnyPublisher<Data, URLError> {
+        return { request, _ in
             return Future { promise in
                 promise(.success(Data.dataFrom(fileName)))
             }.eraseToAnyPublisher()
