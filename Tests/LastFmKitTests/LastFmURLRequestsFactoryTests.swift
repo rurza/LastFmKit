@@ -180,4 +180,20 @@ final class LastFmURLRequestsFactoryTests: XCTestCase {
         XCTAssertTrue(body.contains("limit=\(limit)"))
         XCTAssertTrue(body.contains("artist=\(artist)"))
     }
+
+    func testGetSimilarTracksRequest() throws {
+        let artist = "Danger Mouse"
+        let limit = 5
+        let track = "Season's Trees (feat. Norah Jones)"
+        let request = LastFmURLRequestsFactory.getSimilarTracks(to: track, by: artist, limit: limit, apiKey: apiKey, secret: secret)
+        XCTAssertEqual(request.httpMethod, "POST")
+        XCTAssertNotNil(request.httpBody)
+        let body = String(data: request.httpBody!, encoding: .utf8)!
+        XCTAssertTrue(body.contains("api_key=\(apiKey)"))
+        XCTAssertTrue(body.contains("method=\(LastFmMethod.getSimilarTracks.rawValue)"))
+        XCTAssertTrue(body.contains("limit=\(limit)"))
+        let characterSet = CharacterSet.urlQueryAllowed
+        XCTAssertTrue(body.contains("artist=\(artist.addingPercentEncoding(withAllowedCharacters: characterSet)!)"))
+        XCTAssertTrue(body.contains("track=\(track.addingPercentEncoding(withAllowedCharacters: characterSet)!)"))
+    }
 }

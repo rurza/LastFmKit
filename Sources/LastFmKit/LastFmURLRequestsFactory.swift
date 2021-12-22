@@ -165,6 +165,20 @@ struct LastFmURLRequestsFactory {
         return requestForComponents(components, apiKey: apiKey, secret: secret, sessionKey: nil)
     }
 
+    static func getSimilarTracks(to title: String, by artist: String, limit: Int?, apiKey: String, secret: String) -> URLRequest {
+        var components = commonComponents()
+        var queryItems = [
+            LastFmMethod.getSimilarTracks.queryItem(),
+            URLQueryItem(name: "artist", value: artist),
+            URLQueryItem(name: "track", value: title)
+        ]
+        if let limit = limit {
+            queryItems.append(URLQueryItem(name: "limit", value: "\(limit)"))
+        }
+        components.queryItems = queryItems
+        return requestForComponents(components, apiKey: apiKey, secret: secret, sessionKey: nil)
+    }
+
 }
 
 // MARK: Private

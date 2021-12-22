@@ -42,10 +42,10 @@ extension LastFmUserInfo {
         } else {
             subscriber = false
         }
-        realName = try user.decode(String?.self, forKey: .realName)
+        realName = try user.decodeIfPresent(String.self, forKey: .realName)
         let registered = try user.nestedContainer(keyedBy: CodingKeys.self, forKey: .registeredDate)
         registeredDate = try registered.decode(Date.self, forKey: .text)
-        images = try user.decode([LastFmImage]?.self, forKey: .images)
+        images = try user.decodeIfPresent([LastFmImage].self, forKey: .images)
     }
     
     public func encode(to encoder: Encoder) throws {

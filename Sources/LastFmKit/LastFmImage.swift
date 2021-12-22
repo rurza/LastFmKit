@@ -18,9 +18,13 @@ public struct LastFmImage: Codable, Equatable {
         case medium
         case large
         case extraLarge = "extralarge"
+        case mega
+        case fallback = ""
 
         var semanticRep: Int {
             switch self {
+            case .mega:
+                return 5
             case .extraLarge:
                 return 4
             case .large:
@@ -29,6 +33,8 @@ public struct LastFmImage: Codable, Equatable {
                 return 2
             case .small:
                 return 1
+            default:
+                return 0
             }
         }
     }

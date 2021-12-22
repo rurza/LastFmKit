@@ -9,7 +9,7 @@ import Foundation
 public struct LastFmArtist: Codable, Equatable {
     public let url: URL
     public let name: String
-    public let images: [LastFmImage]
+    public let images: [LastFmImage]?
     public let mbid: String
 
     enum CodingKeys: String, CodingKey {
@@ -24,6 +24,6 @@ public struct LastFmArtist: Codable, Equatable {
         url = try container.decode(URL.self, forKey: .url)
         name = try container.decode(String.self, forKey: .name)
         mbid = try container.decode(String.self, forKey: .mbid)
-        images = try container.decode([LastFmImage].self, forKey: .images)
+        images = try container.decodeIfPresent([LastFmImage].self, forKey: .images)
     }
 }

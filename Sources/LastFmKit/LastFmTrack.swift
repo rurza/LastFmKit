@@ -9,7 +9,7 @@ import Foundation
 public struct LastFmTrack: Codable, Equatable {
     public let name: String
     public let url: URL
-    public let mbid: String
+    public let mbid: String?
     public let isStreamable: Bool?
     public let isLoved: Bool?
     public let date: Date?
@@ -37,13 +37,13 @@ public struct LastFmTrack: Codable, Equatable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         name = try container.decode(String.self, forKey: .name)
         url = try container.decode(URL.self, forKey: .url)
-        mbid = try container.decode(String.self, forKey: .mbid)
+        mbid = try container.decodeIfPresent(String.self, forKey: .mbid)
         if let streamInt = Int(try container.decode(String.self, forKey: .isStreamable)) {
             isStreamable = streamInt != 0
         } else {
             isStreamable = nil
         }
-        if let lovedString = try container.decode(String?.self, forKey: .isLoved), let lovedInt = Int(lovedString) {
+        if let lovedString = try container.decodeIfPresent(String.self, forKey: .isLoved), let lovedInt = Int(lovedString) {
             isLoved = lovedInt != 0
         } else {
             isLoved = nil
@@ -51,7 +51,7 @@ public struct LastFmTrack: Codable, Equatable {
         // ie track isn't scrobbled yet but has "now playing" status
         if container.contains(.date) {
             let dateContainer = try container.nestedContainer(keyedBy: DateKeys.self, forKey: .date)
-            if let stringDate = try dateContainer.decode(String?.self, forKey: .date), let dateDouble = TimeInterval(stringDate) {
+            if let stringDate = try dateContainer.decodeIfPresent(String.self, forKey: .date), let dateDouble = TimeInterval(stringDate) {
                 date = Date(timeIntervalSince1970: dateDouble)
             } else {
                 date = nil

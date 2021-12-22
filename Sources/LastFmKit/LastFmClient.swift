@@ -115,6 +115,11 @@ public struct LastFmClient {
                                                                secret: secret)
         return makeRequestPublisher(request).eraseToAnyPublisher()
     }
+
+    public func getSimilarTracks(toTrack track: String, byArtist artist: String, limit: Int? = nil) -> AnyPublisher<LastFmSimilarTracksResponse, Error> {
+        let request = LastFmURLRequestsFactory.getSimilarTracks(to: track, by: artist, limit: limit, apiKey: apiKey, secret: secret)
+        return makeRequestPublisher(request).eraseToAnyPublisher()
+    }
     
 }
 

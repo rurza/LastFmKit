@@ -17,6 +17,8 @@ enum FileName: String {
     case emptyResponse
     case userInfoWithoutAvatarResponse
     case extendedRecentTracksResponse
+    case similarTracksResponse
+    case similarTrack
 }
 
 extension Data {
