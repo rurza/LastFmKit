@@ -108,7 +108,7 @@ public struct LastFmClient {
                                 extendedInfo: Bool? = nil,
                                 fromDate: Date? = nil,
                                 toDate: Date? = nil) -> AnyPublisher<LastFmRecentTracksResponse, Error> {
-        let request = LastFmURLRequestsFactory.getRecentTracks(user, limit: limit, page: page,
+        let request = LastFmURLRequestsFactory.getRecentTracks(fromUser: user, limit: limit, page: page,
                                                                extendedInfo: extendedInfo,
                                                                fromDate: fromDate,
                                                                toDate: toDate,
@@ -118,12 +118,12 @@ public struct LastFmClient {
     }
 
     public func getSimilarTracks(toTrack track: String, byArtist artist: String, limit: Int? = nil) -> AnyPublisher<LastFmSimilarTracksResponse, Error> {
-        let request = LastFmURLRequestsFactory.getSimilarTracks(to: track, by: artist, limit: limit, apiKey: apiKey, secret: secret)
+        let request = LastFmURLRequestsFactory.getSimilarTracks(toTitle: track, byArtist: artist, limit: limit, apiKey: apiKey, secret: secret)
         return makeRequestPublisher(request, useCache: true).eraseToAnyPublisher()
     }
 
     public func getSimilarArtists(toArtist artist: String, limit: Int? = nil) -> AnyPublisher<LastFmSimilarArtistsReponse, Error> {
-        let request = LastFmURLRequestsFactory.getSimilarArtists(artist, limit: limit, apiKey: apiKey, secret: secret)
+        let request = LastFmURLRequestsFactory.getSimilarArtists(toArtist: artist, limit: limit, apiKey: apiKey, secret: secret)
         return makeRequestPublisher(request, useCache: true).eraseToAnyPublisher()
     }
     

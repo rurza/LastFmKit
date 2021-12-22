@@ -1,0 +1,32 @@
+{
+  "artist": {
+    "url": "https://www.last.fm/music/Massive+Attack",
+    "name": "Massive Attack",
+    "mbid": "10adbe5e-a2c0-4bf3-8249-2b4cbf6e6ca8"
+  },
+  "image": [
+    {
+      "size": "small",
+      "#text": "https://lastfm.freetls.fastly.net/i/u/34s/a13312b6637b94bd56cf45073ea5f255.jpg"
+    },
+    {
+      "size": "medium",
+      "#text": "https://lastfm.freetls.fastly.net/i/u/64s/a13312b6637b94bd56cf45073ea5f255.jpg"
+    },
+    {
+      "size": "large",
+      "#text": "https://lastfm.freetls.fastly.net/i/u/174s/a13312b6637b94bd56cf45073ea5f255.jpg"
+    },
+    {
+      "size": "extralarge",
+      "#text": "https://lastfm.freetls.fastly.net/i/u/300x300/a13312b6637b94bd56cf45073ea5f255.jpg"
+    }
+  ],
+  "mbid": "377288c1-62b4-4d06-ab88-afe6e109536f",
+  "url": "https://www.last.fm/music/Massive+Attack/Collected",
+  "playcount": "3772",
+  "@attr": {
+    "rank": "1"
+  },
+  "name": "Collected"
+}

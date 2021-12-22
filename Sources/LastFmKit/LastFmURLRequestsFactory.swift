@@ -18,6 +18,7 @@ enum LastFmMethod: String {
     case getRecentTracks = "user.getRecentTracks"
     case getSimilarArtists = "artist.getSimilar"
     case getSimilarTracks = "track.getSimilar"
+    case getTopAlbums = "user.getTopAlbums"
     
     func queryItem() -> URLQueryItem {
         return URLQueryItem(name: "method", value: rawValue)
@@ -120,7 +121,7 @@ struct LastFmURLRequestsFactory {
         return requestForComponents(components, apiKey: apiKey, secret: secret, sessionKey: nil)
     }
 
-    static func getRecentTracks(_ user: String,
+    static func getRecentTracks(fromUser user: String,
                                 limit: Int? = nil,
                                 page: Int? = nil,
                                 extendedInfo: Bool? = nil,
@@ -152,7 +153,7 @@ struct LastFmURLRequestsFactory {
         return requestForComponents(components, apiKey: apiKey, secret: secret, sessionKey: nil)
     }
     
-    static func getSimilarArtists(_ artist: String, limit: Int?, apiKey: String, secret: String) -> URLRequest {
+    static func getSimilarArtists(toArtist artist: String, limit: Int?, apiKey: String, secret: String) -> URLRequest {
         var components = commonComponents()
         var queryItems = [
             LastFmMethod.getSimilarArtists.queryItem(),
@@ -165,7 +166,9 @@ struct LastFmURLRequestsFactory {
         return requestForComponents(components, apiKey: apiKey, secret: secret, sessionKey: nil)
     }
 
-    static func getSimilarTracks(to title: String, by artist: String, limit: Int?, apiKey: String, secret: String) -> URLRequest {
+    static func getSimilarTracks(toTitle title: String,
+                                 byArtist artist: String,
+                                 limit: Int?, apiKey: String, secret: String) -> URLRequest {
         var components = commonComponents()
         var queryItems = [
             LastFmMethod.getSimilarTracks.queryItem(),
@@ -179,6 +182,26 @@ struct LastFmURLRequestsFactory {
         return requestForComponents(components, apiKey: apiKey, secret: secret, sessionKey: nil)
     }
 
+    static func getTopAlbums(ofUser user: String,
+                             period: LastFmPeriod,
+                             limit: Int? = nil,
+                             page: Int? = nil,
+                             apiKey: String,
+                             secret: String) -> URLRequest {
+        var components = commonComponents()
+        var queryItems = [
+            LastFmMethod.getTopAlbums.queryItem(),
+            URLQueryItem(name: "user", value: user)
+        ]
+        if let limit = limit {
+            queryItems.append(URLQueryItem(name: "limit", value: "\(limit)"))
+        }
+        if let page = page {
+            queryItems.append(URLQueryItem(name: "page", value: "\(page)"))
+        }
+        components.queryItems = queryItems
+        return requestForComponents(components, apiKey: apiKey, secret: secret, sessionKey: nil)
+    }
 }
 
 // MARK: Private

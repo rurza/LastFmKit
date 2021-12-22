@@ -13,7 +13,7 @@ public struct LastFmTrack: Codable, Equatable {
     public let isStreamable: Bool?
     public let isLoved: Bool?
     public let date: Date?
-    public let images: [LastFmImage]
+    public let images: [LastFmImage]?
     public let artist: LastFmArtist
     public let album: LastFmAlbum
 
@@ -59,7 +59,11 @@ public struct LastFmTrack: Codable, Equatable {
         } else {
             date = nil
         }
-        images = try container.decode([LastFmImage].self, forKey: .images)
+        do {
+            images = try container.decodeIfPresent([LastFmImage].self, forKey: .images)
+        } catch {
+            images = nil
+        }
         artist = try container.decode(LastFmArtist.self, forKey: .artist)
         album = try container.decode(LastFmAlbum.self, forKey: .album)
     }

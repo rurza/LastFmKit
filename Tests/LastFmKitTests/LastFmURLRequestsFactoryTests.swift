@@ -154,7 +154,7 @@ final class LastFmURLRequestsFactoryTests: XCTestCase {
         let fromDate = Date(timeIntervalSinceNow: -60*60*24*7)
         let toDate = Date()
         let limit = 100
-        let request = LastFmURLRequestsFactory.getRecentTracks(user, limit: limit, page: 1, extendedInfo: true, fromDate: fromDate, toDate: toDate, apiKey: apiKey, secret: secret)
+        let request = LastFmURLRequestsFactory.getRecentTracks(fromUser: user, limit: limit, page: 1, extendedInfo: true, fromDate: fromDate, toDate: toDate, apiKey: apiKey, secret: secret)
         XCTAssertEqual(request.httpMethod, "POST")
         XCTAssertNotNil(request.httpBody)
         let body = String(data: request.httpBody!, encoding: .utf8)!
@@ -171,7 +171,7 @@ final class LastFmURLRequestsFactoryTests: XCTestCase {
     func testGetSimilarArtistsRequest() throws {
         let artist = "Tool"
         let limit = 10
-        let request = LastFmURLRequestsFactory.getSimilarArtists(artist, limit: limit, apiKey: apiKey, secret: secret)
+        let request = LastFmURLRequestsFactory.getSimilarArtists(toArtist: artist, limit: limit, apiKey: apiKey, secret: secret)
         XCTAssertEqual(request.httpMethod, "POST")
         XCTAssertNotNil(request.httpBody)
         let body = String(data: request.httpBody!, encoding: .utf8)!
@@ -185,7 +185,7 @@ final class LastFmURLRequestsFactoryTests: XCTestCase {
         let artist = "Danger Mouse"
         let limit = 5
         let track = "Season's Trees (feat. Norah Jones)"
-        let request = LastFmURLRequestsFactory.getSimilarTracks(to: track, by: artist, limit: limit, apiKey: apiKey, secret: secret)
+        let request = LastFmURLRequestsFactory.getSimilarTracks(toTitle: track, byArtist: artist, limit: limit, apiKey: apiKey, secret: secret)
         XCTAssertEqual(request.httpMethod, "POST")
         XCTAssertNotNil(request.httpBody)
         let body = String(data: request.httpBody!, encoding: .utf8)!
