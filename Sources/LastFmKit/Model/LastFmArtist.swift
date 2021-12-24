@@ -26,4 +26,11 @@ public struct LastFmArtist: Codable, Equatable {
         mbid = try container.decode(String.self, forKey: .mbid)
         images = try container.decodeIfPresent([LastFmImage].self, forKey: .images)
     }
+
+    public init(url: URL, name: String, images: [LastFmImage]?, mbid: String) {
+        self.url = url
+        self.name = name
+        self.images = images
+        self.mbid = mbid
+    }
 }

@@ -14,6 +14,15 @@ public struct LastFmTopAlbumsResponse: Codable, Equatable {
     public let page: Int?
     public let perPage: Int?
     public let total: Int?
+
+    public init(albums: [LastFmTopAlbum], user: String, totalPages: Int?, page: Int?, perPage: Int?, total: Int?) {
+        self.albums = albums
+        self.user = user
+        self.totalPages = totalPages
+        self.page = page
+        self.perPage = perPage
+        self.total = total
+    }
 }
 
 extension LastFmTopAlbumsResponse {

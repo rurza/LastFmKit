@@ -15,6 +15,16 @@ public struct LastFmTopAlbum: Codable, Equatable {
     public let name: String
     public let playcount: Int?
     public let rank: Int?
+
+    public init(artist: LastFmArtist?, images: [LastFmImage]?, mbid: String?, url: URL?, name: String, playcount: Int?, rank: Int?) {
+        self.artist = artist
+        self.images = images
+        self.mbid = mbid
+        self.url = url
+        self.name = name
+        self.playcount = playcount
+        self.rank = rank
+    }
 }
 
 extension LastFmTopAlbum {

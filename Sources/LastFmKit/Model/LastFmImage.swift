@@ -9,7 +9,6 @@ import Foundation
 
 
 public struct LastFmImage: Codable, Equatable {
-    
     public let size: Size
     public let url: URL
     
@@ -37,6 +36,11 @@ public struct LastFmImage: Codable, Equatable {
                 return 0
             }
         }
+    }
+
+    public init(size: LastFmImage.Size, url: URL) {
+        self.size = size
+        self.url = url
     }
 
 }
