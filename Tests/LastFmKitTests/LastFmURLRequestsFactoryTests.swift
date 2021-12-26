@@ -196,4 +196,17 @@ final class LastFmURLRequestsFactoryTests: XCTestCase {
         XCTAssertTrue(body.contains("artist=\(artist.addingPercentEncoding(withAllowedCharacters: characterSet)!)"))
         XCTAssertTrue(body.contains("track=\(track.addingPercentEncoding(withAllowedCharacters: characterSet)!)"))
     }
+    
+    func testGetTopArtistsRequest() throws {
+        let limit = 5
+        let username = "rurzynski"
+        let request = LastFmURLRequestsFactory.getTopArtists(ofUser: username, period: .month, limit: limit, apiKey: apiKey, secret: secret)
+        XCTAssertEqual(request.httpMethod, "POST")
+        XCTAssertNotNil(request.httpBody)
+        let body = String(data: request.httpBody!, encoding: .utf8)!
+        XCTAssertTrue(body.contains("api_key=\(apiKey)"))
+        XCTAssertTrue(body.contains("method=\(LastFmMethod.getTopArtists.rawValue)"))
+        XCTAssertTrue(body.contains("limit=\(limit)"))
+        XCTAssertTrue(body.contains("user=\(username)"))
+    }
 }
