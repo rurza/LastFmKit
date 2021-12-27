@@ -48,7 +48,11 @@ extension LastFmTopAlbum {
         playcount = Int(playcountString)
         name = try container.decode(String.self, forKey: .name)
         url = try container.decodeIfPresent(URL.self, forKey: .url)
-        mbid = try container.decodeIfPresent(String.self, forKey: .mbid)
+        if let mbid = try container.decodeIfPresent(String.self, forKey: .mbid), mbid.count > 0 {
+            self.mbid = mbid
+        } else {
+            self.mbid = nil
+        }
         do {
             images = try container.decodeIfPresent([LastFmImage].self, forKey: .images)
         } catch {

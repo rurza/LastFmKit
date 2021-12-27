@@ -34,8 +34,12 @@ extension LastFmSimilarTrack {
         playCount = try container.decode(Int.self, forKey: .playCount)
         url = try container.decodeIfPresent(URL.self, forKey: .url)
         images = try container.decodeIfPresent([LastFmImage].self, forKey: .images)
-        mbid = try container.decodeIfPresent(String.self, forKey: .mbid)
         duration = try container.decodeIfPresent(Int.self, forKey: .duration)
         artist = try container.decodeIfPresent(LastFmArtist.self, forKey: .artist)
+        if let mbid = try container.decodeIfPresent(String.self, forKey: .mbid), mbid.count > 0 {
+            self.mbid = mbid
+        } else {
+            self.mbid = nil
+        }
     }
 }

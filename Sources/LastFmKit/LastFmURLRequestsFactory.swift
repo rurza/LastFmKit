@@ -16,6 +16,7 @@ enum LastFmMethod: String {
     case unloveTrack = "track.unlove"
     case updateNowPlaying = "track.updateNowPlaying"
     case getSimilarTracks = "track.getSimilar"
+    case getLovedTracks = "user.getLovedTracks"
     case getTopAlbums = "user.getTopAlbums"
     case getTopArtists = "user.getTopArtists"
     case getUserInfo = "user.getInfo"
@@ -205,12 +206,30 @@ struct LastFmURLRequestsFactory {
         return requestForComponents(components, apiKey: apiKey, secret: secret, sessionKey: nil)
     }
     
-    static func getTopArtists(ofUser user: String, period: LastFmPeriod, limit: Int? = nil, page: Int? = nil, apiKey: String, secret: String) -> URLRequest {
+    static func getTopArtists(ofUser user: String, period: LastFmPeriod, limit: Int? = nil, page: Int? = nil,
+                              apiKey: String, secret: String) -> URLRequest {
         var components = commonComponents()
         var queryItems = [
             LastFmMethod.getTopArtists.queryItem(),
             URLQueryItem(name: "user", value: user),
             URLQueryItem(name: "period", value: period.rawValue)
+        ]
+        if let limit = limit {
+            queryItems.append(URLQueryItem(name: "limit", value: "\(limit)"))
+        }
+        if let page = page {
+            queryItems.append(URLQueryItem(name: "page", value: "\(page)"))
+        }
+        components.queryItems = queryItems
+        return requestForComponents(components, apiKey: apiKey, secret: secret, sessionKey: nil)
+    }
+    
+    static func getLovedTracks(ofUser user: String, limit: Int? = nil, page: Int? = nil,
+                               apiKey: String, secret: String) -> URLRequest {
+        var components = commonComponents()
+        var queryItems = [
+            LastFmMethod.getLovedTracks.queryItem(),
+            URLQueryItem(name: "user", value: user)
         ]
         if let limit = limit {
             queryItems.append(URLQueryItem(name: "limit", value: "\(limit)"))

@@ -117,27 +117,45 @@ public struct LastFmClient {
         return makeRequestPublisher(request).eraseToAnyPublisher()
     }
 
-    public func getSimilarTracks(toTrack track: String, byArtist artist: String, limit: Int? = nil) -> AnyPublisher<LastFmSimilarTracksResponse, Error> {
+    public func getSimilarTracks(toTrack track: String, byArtist artist: String, limit: Int? = nil, useCache: Bool = true) -> AnyPublisher<LastFmSimilarTracksResponse, Error> {
         let request = LastFmURLRequestsFactory.getSimilarTracks(toTitle: track, byArtist: artist, limit: limit, apiKey: apiKey, secret: secret)
-        return makeRequestPublisher(request, useCache: true).eraseToAnyPublisher()
+        return makeRequestPublisher(request, useCache: useCache).eraseToAnyPublisher()
     }
 
-    public func getSimilarArtists(toArtist artist: String, limit: Int? = nil) -> AnyPublisher<LastFmSimilarArtistsReponse, Error> {
+    public func getSimilarArtists(toArtist artist: String, limit: Int? = nil, useCache: Bool = true) -> AnyPublisher<LastFmSimilarArtistsReponse, Error> {
         let request = LastFmURLRequestsFactory.getSimilarArtists(toArtist: artist, limit: limit, apiKey: apiKey, secret: secret)
-        return makeRequestPublisher(request, useCache: true).eraseToAnyPublisher()
+        return makeRequestPublisher(request, useCache: useCache).eraseToAnyPublisher()
     }
 
     public func getTopAlbums(ofUser user: String,
                              period: LastFmPeriod = .overall,
                              limit: Int? = nil,
-                             page: Int? = nil) -> AnyPublisher<LastFmTopAlbumsResponse, Error> {
+                             page: Int? = nil,
+                             useCache: Bool = true) -> AnyPublisher<LastFmTopAlbumsResponse, Error> {
         let request = LastFmURLRequestsFactory.getTopAlbums(ofUser: user,
                                                             period: period,
                                                             limit: limit,
                                                             page: page,
                                                             apiKey: apiKey,
                                                             secret: secret)
-        return makeRequestPublisher(request, useCache: false)
+        return makeRequestPublisher(request, useCache: useCache)
+    }
+
+    public func getTopArtists(ofUser user: String, period: LastFmPeriod = .overall,
+                              limit: Int? = nil, page: Int? = nil, useCache: Bool = true)
+    -> AnyPublisher<LastFmTopArtistsResponse, Error> {
+        let request = LastFmURLRequestsFactory.getTopArtists(ofUser: user, period: period, limit: limit, page: page, apiKey: apiKey, secret: secret)
+        return makeRequestPublisher(request, useCache: useCache)
+    }
+
+    public func getLovedTracks(ofUser user: String, limit: Int? = nil,
+                               page: Int? = nil, useCache: Bool = true) -> AnyPublisher<LastFmLovedTracksResponse, Error> {
+        let request = LastFmURLRequestsFactory.getLovedTracks(ofUser: user,
+                                                              limit: limit,
+                                                              page: page,
+                                                              apiKey: apiKey,
+                                                              secret: secret)
+        return makeRequestPublisher(request, useCache: useCache)
     }
     
 }

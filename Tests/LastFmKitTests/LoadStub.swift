@@ -23,6 +23,7 @@ enum FileName: String {
     case topAlbum
     case topAlbumsResponse
     case topArtistsResponse
+    case lovedTracksResponse
 }
 
 extension Data {

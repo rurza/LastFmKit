@@ -37,7 +37,6 @@ public struct LastFmTrack: Codable, Equatable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         name = try container.decode(String.self, forKey: .name)
         url = try container.decode(URL.self, forKey: .url)
-        mbid = try container.decodeIfPresent(String.self, forKey: .mbid)
         if let streamInt = Int(try container.decode(String.self, forKey: .isStreamable)) {
             isStreamable = streamInt != 0
         } else {
@@ -66,6 +65,11 @@ public struct LastFmTrack: Codable, Equatable {
         }
         artist = try container.decode(LastFmArtist.self, forKey: .artist)
         album = try container.decode(LastFmAlbum.self, forKey: .album)
+        if let mbid = try container.decodeIfPresent(String.self, forKey: .mbid), mbid.count > 0 {
+            self.mbid = mbid
+        } else {
+            self.mbid = nil
+        }
     }
 
     public func encode(to encoder: Encoder) throws {

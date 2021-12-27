@@ -209,4 +209,19 @@ final class LastFmURLRequestsFactoryTests: XCTestCase {
         XCTAssertTrue(body.contains("limit=\(limit)"))
         XCTAssertTrue(body.contains("user=\(username)"))
     }
+    
+    func testGetLovedTracksRequest() throws {
+        let limit = 5
+        let page = 2
+        let username = "rurzynski"
+        let request = LastFmURLRequestsFactory.getLovedTracks(ofUser: username, limit: limit, page: page, apiKey: apiKey, secret: secret)
+        XCTAssertEqual(request.httpMethod, "POST")
+        XCTAssertNotNil(request.httpBody)
+        let body = String(data: request.httpBody!, encoding: .utf8)!
+        XCTAssertTrue(body.contains("api_key=\(apiKey)"))
+        XCTAssertTrue(body.contains("method=\(LastFmMethod.getLovedTracks.rawValue)"))
+        XCTAssertTrue(body.contains("limit=\(limit)"))
+        XCTAssertTrue(body.contains("page=\(page)"))
+        XCTAssertTrue(body.contains("user=\(username)"))
+    }
 }
