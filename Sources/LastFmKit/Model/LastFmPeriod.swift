@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum LastFmPeriod: String {
+public enum LastFmPeriod: String, Codable, Equatable {
     case overall
     case week = "7day"
     case month = "1month"
