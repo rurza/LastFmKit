@@ -1,5 +1,5 @@
 //
-//  LastFmSimilarArtistsReponse.swift
+//  LastFmSimilarArtistsResponse.swift
 //  
 //
 //  Created by Adam Różyński on 22/12/2021.
@@ -7,12 +7,12 @@
 
 import Foundation
 
-public struct LastFmSimilarArtistsReponse: Codable, Equatable {
+public struct LastFmSimilarArtistsResponse: Codable, Equatable {
     public let artists: [LastFmArtist]
     public let artist: String
 }
 
-extension LastFmSimilarArtistsReponse {
+extension LastFmSimilarArtistsResponse {
     enum CodingKeys: String, CodingKey {
         case similarArtists = "similarartists"
         case artists = "artist"

@@ -122,7 +122,7 @@ public struct LastFmClient {
         return makeRequestPublisher(request, useCache: useCache).eraseToAnyPublisher()
     }
 
-    public func getSimilarArtists(toArtist artist: String, limit: Int? = nil, useCache: Bool = true) -> AnyPublisher<LastFmSimilarArtistsReponse, Error> {
+    public func getSimilarArtists(toArtist artist: String, limit: Int? = nil, useCache: Bool = true) -> AnyPublisher<LastFmSimilarArtistsResponse, Error> {
         let request = LastFmURLRequestsFactory.getSimilarArtists(toArtist: artist, limit: limit, apiKey: apiKey, secret: secret)
         return makeRequestPublisher(request, useCache: useCache).eraseToAnyPublisher()
     }
