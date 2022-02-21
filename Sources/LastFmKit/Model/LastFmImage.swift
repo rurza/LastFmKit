@@ -10,7 +10,7 @@ import Foundation
 
 public struct LastFmImage: Codable, Equatable {
     public let size: Size
-    public let url: URL
+    public let url: URL?
     
     public enum Size: String, Codable, Equatable {
         case small
@@ -54,8 +54,12 @@ extension LastFmImage {
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        size = try container.decode(Size.self, forKey: .size)
-        url = try container.decode(URL.self, forKey: .url)
+        size = try container.decode(Size?.self, forKey: .size) ?? .fallback
+        if let urlString = try container.decodeIfPresent(String.self, forKey: .url), let url = URL(string: urlString) {
+            self.url = url
+        } else {
+            self.url = nil
+        }
     }
     
 }

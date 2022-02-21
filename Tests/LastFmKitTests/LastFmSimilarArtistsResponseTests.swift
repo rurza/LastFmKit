@@ -19,7 +19,7 @@ final class LastFmSimilarArtistsResponseTests: XCTestCase {
     func testDecoding() throws {
         let data = Data.dataFrom(.similarArtistsResponse)
         let similarArtists = try decoder.decode(LastFmSimilarArtistsResponse.self, from: data)
-        XCTAssertEqual(similarArtists.artist, "Cher")
-        XCTAssertEqual(similarArtists.artists.count, 100)
+        XCTAssertEqual(similarArtists.artist, "Pink Floyd")
+        XCTAssertEqual(similarArtists.artists.count, 7)
     }
 }
