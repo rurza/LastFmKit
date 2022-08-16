@@ -13,13 +13,11 @@ public protocol LastFmClientCacheProvider: AnyObject {
     func saveResponse<Resource: Codable>(_ response: Resource, forRequest req: URLRequest)
 }
 
-public struct LastFmClient {
-
+public class LastFmClient {
     public let secret: String
     public let apiKey: String
-    public weak var cacheProvider: LastFmClientCacheProvider?
     public var dataTaskPublisher: (URLRequest, Bool) -> AnyPublisher<Data, URLError>
-    
+    public weak var cacheProvider: LastFmClientCacheProvider?
     public init(secret: String,
                 apiKey: String,
                 urlSession: URLSession = URLSession(configuration: .default),

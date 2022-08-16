@@ -7,11 +7,12 @@
 
 import Foundation
 
-public struct LastFmError: Error, Equatable {
+public struct LastFmError: Error, Equatable, CustomNSError {
     public let error: Code?
     public let message: String
 
     public enum Code: Int, Codable {
+        case errorDoesNotExists = 1
         case invalidService = 2
         case invalidMethod = 3
         case authenticationFailedOrUsePost = 4
@@ -26,6 +27,14 @@ public struct LastFmError: Error, Equatable {
         case tempError = 16
         case suspendedApiKey = 26
         case rateLimitExceeded = 29
+    }
+
+    public var errorCode: Int {
+        error?.rawValue ?? 0
+    }
+
+    public var localizedDescription: String {
+        message
     }
 }
 
